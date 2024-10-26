@@ -1,56 +1,63 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const Italian = () => {
-  const [respose, setResponse] = React.useState<string>("");
-  const [gender, setGender] = React.useState<string>("");
+const Italian: React.FC = () => {
+  const [response, setResponse] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
   const router = useRouter();
 
-  function handleClick({ target }: any) {
-    const value = (target as HTMLButtonElement).value;
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const value = event.currentTarget.value;
+
     if (value === "man" || value === "woman") {
       setGender(value);
       router.push("parents");
     } else {
       setResponse(value);
     }
-  }
+  };
 
-  React.useEffect(() => {
-    if (respose === "negative") {
+  useEffect(() => {
+    if (response === "negative") {
       router.push("arvore");
+      return;
     }
-    const userInfo = localStorage.getItem("userInfo") || null;
 
-    let data = userInfo ? JSON.parse(userInfo) : {};
-    data.step = 2;
-    data.details = {
-      youKnowWho: respose,
-      gender: gender,
+    const userInfo = localStorage.getItem("userInfo");
+    const data = userInfo ? JSON.parse(userInfo) : {};
+
+    const updatedData = {
+      ...data,
+      step: 2,
+      details: {
+        youKnowWho: response,
+        gender: gender,
+      },
     };
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  }, [gender, respose]);
+
+    localStorage.setItem("userInfo", JSON.stringify(updatedData));
+  }, [gender, response, router]);
 
   return (
     <div className="page">
       <div>
-        <h2>Voce sabe quem é o italiano</h2>
+        <h2>Você sabe quem é o italiano?</h2>
         <button value="confirm" onClick={handleClick}>
           Sim
         </button>
-        {respose === "confirm" ? (
+        {response === "confirm" ? (
           <div>
             <button value="man" onClick={handleClick}>
-              homem
+              Homem
             </button>
             <button value="woman" onClick={handleClick}>
-              mulher
+              Mulher
             </button>
           </div>
         ) : (
           <button value="negative" onClick={handleClick}>
-            Nao
+            Não
           </button>
         )}
       </div>

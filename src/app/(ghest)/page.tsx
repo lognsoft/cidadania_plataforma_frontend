@@ -1,55 +1,46 @@
 "use client";
 
-import Loading from "@/components/Loading";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { RedirectRouteService } from "@/service/RedirectRouteService";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const service = new RedirectRouteService(router, setLoading);
-  const userInfo = localStorage.getItem("userInfo") || null;
-  let data = userInfo ? JSON.parse(userInfo) : {};
 
   useEffect(() => {
-    service.redirectToRoute();
-    redirectStep(data.step);
-  }, []);
+    const userInfoString = localStorage.getItem("userInfo");
+    const userInfo = userInfoString ? JSON.parse(userInfoString) : {};
 
-  function redirectStep(step: number) {
+    const redirectRouteCountryService = new RedirectRouteService(router, setLoading, userInfo);
+
+    redirectStepRoute(userInfo.step, redirectRouteCountryService);
+  }, [router]);
+
+  const redirectStepRoute = useCallback((step: number, redirectRouteService: RedirectRouteService) => {
     switch (step) {
+      // País já selecionado
       case 2:
-        console.log("teste");
-
+        redirectRouteService.redirectToRoute();
         break;
-
+      //Precisa criar os outros steps./ Voce vai criar aqui.
       default:
+        setLoading(false); // Finaliza o carregamento se nao houver redirecionamento
         break;
     }
+  }, []);
+
+  if (loading) {
+    return <div>Carregando...</div>;
   }
 
-  // React.useEffect(() => {
-  //   // routeService.redirectToRoute();
-  // useEffect(() => {
-  //   setIsMounted(true);
-  // }, []);
-
-  // if (!isMounted) {
-  //   return <Loading />;
-  // }
-
-  // }, [router]);
-
-  // if (loading) return <Loading />;
-
   return (
-    <section className="page grid grid-cols-2 min-h-screen ">
+    <section className="page grid grid-cols-2 min-h-screen">
       <div>lado login</div>
       <div>
         <Link href="register/country">
-          <button className="p-10 bg-green-500">cadastrar</button>
+          <button className="p-10 bg-green-500">Cadastrar</button>
         </Link>
       </div>
     </section>
