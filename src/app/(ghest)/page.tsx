@@ -1,31 +1,57 @@
-'use client';
-import { useState } from "react";
+"use client";
+
+import Loading from "@/components/Loading";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { RedirectRouteService } from "@/service/RedirectRouteService";
 
 export default function Home() {
-  const [name, setName] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  const service = new RedirectRouteService(router, setLoading);
+  const userInfo = localStorage.getItem("userInfo") || null;
+  let data = userInfo ? JSON.parse(userInfo) : {};
 
-  function handlerClick(){
-    const user_info = localStorage.getItem('user_info') || null;
+  useEffect(() => {
+    service.redirectToRoute();
+    redirectStep(data.step);
+  }, []);
 
-    if(user_info === null){
-      localStorage.setItem('user_info', JSON.stringify({ nome: name }));
-      return;
+  function redirectStep(step: number) {
+    switch (step) {
+      case 2:
+        console.log("teste");
+
+        break;
+
+      default:
+        break;
     }
-
-    let user_info_parse = JSON.parse(user_info);
-
-    let data = {
-      ...user_info_parse,
-      nome: name,
-    }
-
-    localStorage.setItem('user_info', JSON.stringify(data));
   }
 
+  // React.useEffect(() => {
+  //   // routeService.redirectToRoute();
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
+
+  // if (!isMounted) {
+  //   return <Loading />;
+  // }
+
+  // }, [router]);
+
+  // if (loading) return <Loading />;
+
   return (
-    <div className="page">
-      <input style={{color: '#000'}} type="text" name="user_name" value={name} onChange={(e) => setName(e.target.value)}/>
-      <button onClick={handlerClick}>next</button>
-    </div>
+    <section className="page grid grid-cols-2 min-h-screen ">
+      <div>lado login</div>
+      <div>
+        <Link href="register/country">
+          <button className="p-10 bg-green-500">cadastrar</button>
+        </Link>
+      </div>
+    </section>
   );
 }
