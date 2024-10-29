@@ -1,30 +1,35 @@
 import { NextRouter } from "next/router";
 type SetLoadingType = (loading: boolean) => void;
 
-interface UserInfo {
-  country?: string;
-  step?: number;
-}
-
 export class RedirectRouteService {
   private _router: NextRouter;
   private _setLoading: SetLoadingType;
-  private userInfo: UserInfo;
 
-  constructor(router: NextRouter, setLoading: SetLoadingType, userInfo: UserInfo) {
+  constructor(router: NextRouter, setLoading: SetLoadingType) {
     this._router = router;
     this._setLoading = setLoading;
-    this.userInfo = userInfo;
   }
 
   //Alterei o código para nao precisar mais do switch case para identificar os paises.
   //Nao precisa mais mexer nesse código quando um novo pais for inserido.
-  public redirectToRoute(): void {
-    if (!this.userInfo.country) {
+  public redirectToRoute(country: string ): void {
+    if (!country) {      
       this._setLoading(false);
       return;
     }
+    //this._router.replace(`/register/${this.userInfo.cozuntry}`);
 
-    this._router.replace(`/register/${this.userInfo.country}`);
+    this._router.replace(`/register/${country}`);
+  }
+  
+  public redirectToRouteStep(step: string, country: string): void {
+
+    console.log(step);
+    
+    if (!step) {
+      this._setLoading(false)
+      return;
+    }
+    this._router.replace(`/register/${country}/parents`)
   }
 }

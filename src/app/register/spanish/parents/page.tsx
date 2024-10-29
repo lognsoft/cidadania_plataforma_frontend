@@ -11,11 +11,15 @@ import {
 } from "@/app/(ghest)/service/RegisterUser/UpdatedUserInfoLocalStorageService";
 import ButtonBack from "@/components/ButtonBack";
 
-const ParentsItalian = () => {
+const ParentsSpanish = () => {
+
   const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null);
   const gender = userInfo?.questions?.gender;
+  console.log(gender);
   
+ 
+
   React.useEffect(() => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
@@ -30,6 +34,7 @@ const ParentsItalian = () => {
       updateUserInfo(userInfo)
     }
   },[userInfo])
+
 
   const ManGeneration: string[] = [
     "Pai",
@@ -64,4 +69,4 @@ const ParentsItalian = () => {
   );
 };
 
-export default ParentsItalian;
+export default ParentsSpanish;

@@ -12,6 +12,7 @@ import {
 import ButtonBack from "@/components/ButtonBack";
 
 const ParentsItalian = () => {
+
   const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null);
   const gender = userInfo?.questions?.gender;
