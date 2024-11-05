@@ -1,19 +1,12 @@
-"use client"
-import { useEffect } from 'react'
+import React from "react";
+import Form from "./components/Form";
 
-const Arvore = () => {
-  const userInfoString = localStorage.getItem("userInfo") || null;
-  const userInfo = userInfoString ? JSON.parse(userInfoString) : new Object();
-  
-  useEffect(() =>{
-    userInfo.step = 4
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
-  }, [])
+const page = () => {
   return (
-    <div>
-      arvore
+    <div className="flex justify-center items-center h-[80vh]">
+      <Form />
     </div>
-  )
-}
+  );
+};
 
-export default Arvore
+export default page;
