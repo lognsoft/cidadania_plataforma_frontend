@@ -5,7 +5,7 @@ export function SaveKnowDecisionLocalStorage(know: boolean): void {
 
   if (User) {
     User.details.youKnow = know;
-    User.step = 2;
+    // User.step = 2;
     LocalStorageService.updateItem("userInfo", User);
   }
 }

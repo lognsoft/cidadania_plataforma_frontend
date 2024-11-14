@@ -5,7 +5,7 @@ export function SaveGenderLocalStorage(gender: number, router: any) {
 
   if (User) {
     User.details.gender = gender;
-    User.step = 3;
+    // User.step = 3;
     LocalStorageService.updateItem("userInfo", User);
     router.push("/register/parents");
   }
