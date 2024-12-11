@@ -29,35 +29,37 @@ const TreePage = () => {
     return (
         <main>
             { etapa === "etapa1" && (
-                <div>
+                <div className={''}>
                     <h2>Conhece o sujeito?</h2>
-                    <div className={''}>
-                        <button onClick={() => router.push('/tree/?etapa=etapa2')}>Sim</button>
-                        <button onClick={() => router.push('/tree/?etapa=etapa2')}>Não</button>
+                    <div className={'sujeito-confirm'}>
+                        <button onClick={() => router.push('/tree/?etapa=etapa2')} className={"btn-confirm"}>Sim</button>
+                        <button onClick={() => router.push('/tree/?etapa=etapa3')} className={"btn-secondary"}>Não</button>
                     </div>
                 </div>
             )}
 
             { etapa === "etapa2" && (
                 <div>
-                    <form onSubmit={handleSubmit}>
-                        <label>
-                            Trisavo
-                            <input className={'form-control'} type={'radio'} name={'root'} value={'trisavo'}/>
-                        </label>
-                        <label>
-                            Bisavo
-                            <input className={'form-control'} type={'radio'} name={'root'} value={'bisavo'}/>
-                        </label>
-                        <label>
-                            Vo
-                            <input className={'form-control'} type={'radio'} name={'root'} value={'vo'}/>
-                        </label>
-                        <label>
-                            Pai
-                            <input className={'form-control'} type={'radio'} name={'root'} value={'pai'}/>
-                        </label>
-                        <button type={'submit'}>Confirmar</button>
+                    <form onSubmit={handleSubmit} className="form form-parents">
+                        <div className={'form-group'}>
+                            <label className={'input-wrapper'}>
+                                Trisavo
+                                <input className={'form-control'} type={'radio'} name={'root'} value={'trisavo'}/>
+                            </label>
+                            <label className={'input-wrapper'}>
+                                Bisavo
+                                <input className={'form-control'} type={'radio'} name={'root'} value={'bisavo'}/>
+                            </label>
+                            <label className={'input-wrapper'}>
+                                Vo
+                                <input className={'form-control'} type={'radio'} name={'root'} value={'vo'}/>
+                            </label>
+                            <label className={'input-wrapper'}>
+                                Pai
+                                <input className={'form-control'} type={'radio'} name={'root'} value={'pai'}/>
+                            </label>
+                        </div>
+                        <button type={'submit'} className={"btn-confirm"}>Confirmar</button>
                     </form>
                 </div>
             )}
@@ -91,14 +93,16 @@ const TreePage = () => {
                         </label>
                         <div className={'container-wrapper'}>
                             <h3 className={'title-form-h3'}>Sexo*</h3>
-                            <label>
-                                Masculíno
-                                <input className={'form-control'} type='radio' name={'sexo'} value={'M'} required/>
-                            </label>
-                            <label>
-                                Feminíno
-                                <input className={'form-control'} type='radio' name={'sexo'} value={'F'} required/>
-                            </label>
+                            <div className={'form-group'}>
+                                <label className={'input-gender'}>
+                                    Masculíno
+                                    <input className={'form-control'} type='radio' name={'sexo'} value={'M'} required/>
+                                </label>
+                                <label className={'input-gender'}>
+                                    Feminíno
+                                    <input className={'form-control'} type='radio' name={'sexo'} value={'F'} required/>
+                                </label>
+                            </div>
                         </div>
                     </form>
                 </div>

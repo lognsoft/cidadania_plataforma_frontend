@@ -33,8 +33,8 @@ const FormUser = () => {
                         E-mail*
                         <input className={'form-control'} type='email' name={'name'} placeholder={'E-mail*'}/>
                     </label>
-                    <button type={'submit'}>Entrar</button>
-                    <Link href={'/?register'}>Registrar</Link>
+                    <button type={'submit'} className={"btn-confirm"}>Entrar</button>
+                    <Link href={'/?register'} className={"btn-secondary"}>Registrar</Link>
                 </form>
             ) : (
                 <form className={'form form-login'} onSubmit={handleSubmit}>
@@ -47,8 +47,8 @@ const FormUser = () => {
                         E-mail*
                         <input className={'form-control'} type='email' name={'name'} placeholder={'E-mail*'}/>
                     </label>
-                    <button type={'submit'}>Registrar</button>
-                    <Link href={'/'}>Logar</Link>
+                    <button type={'submit'} className={"btn-secondary"}>Registrar</button>
+                    <Link href={'/'} className={"btn-confirm"}>Logar</Link>
                 </form>
             )}
         </>
