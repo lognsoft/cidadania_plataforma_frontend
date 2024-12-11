@@ -3,3 +3,4 @@ SWR
 tailwindcss
 motion
 reacthookform
+shadeui
