@@ -2,6 +2,11 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import {useEffect, useState, useMemo, FormEvent } from "react";
 import Link from "next/link";
+import {Button} from "@/components/ui/button";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import Image from "next/image";
+import FormLogin from "@/components/FormLogin";
 
 const FormUser = () => {
     const params = useSearchParams();
@@ -15,43 +20,25 @@ const FormUser = () => {
         setHasParam(params.has("register"));
     }, [paramTerm]);
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        router.push('/country');
-    }
 
     return (
-        <>
+        <div className="md:grid-cols-2 grid w-full content-center justify-items-center h-full">
+            <div className="">
+                <Image src={"/images/3.png"} className="!h-auto !max-w-full" alt="teste" width={200} height={100} />
+            </div>
             { !hasParam ? (
-                <form className={'form form-login'} onSubmit={handleSubmit}>
-                    <h2 className={'title-form-h2'}>Login</h2>
-                    <label className={'input-wrapper'}>
-                        Name*
-                        <input className={'form-control'} type='text' name={'name'} placeholder={'Name*'}/>
-                    </label>
-                    <label className={'input-wrapper'}>
-                        E-mail*
-                        <input className={'form-control'} type='email' name={'name'} placeholder={'E-mail*'}/>
-                    </label>
-                    <button type={'submit'} className={"btn-confirm"}>Entrar</button>
-                    <Link href={'/?register'} className={"btn-secondary"}>Registrar</Link>
-                </form>
+                <div className="flex flex-col justify-center w-full max-w-96 gap-2">
+                    <Button>
+                        <Link href={"/country"}>COMECE AGORA</Link>
+                    </Button>
+                    <Button>
+                        <Link href={"/?register"}>JÁ TENHO UMA CONTA</Link>
+                    </Button>
+                </div>
             ) : (
-                <form className={'form form-login'} onSubmit={handleSubmit}>
-                    <h2 className={'title-form-h2'}>Registrar</h2>
-                    <label className={'input-wrapper'}>
-                        Name*
-                        <input className={'form-control'} type='text' name={'name'} placeholder={'Name*'}/>
-                    </label>
-                    <label className={'input-wrapper'}>
-                        E-mail*
-                        <input className={'form-control'} type='email' name={'name'} placeholder={'E-mail*'}/>
-                    </label>
-                    <button type={'submit'} className={"btn-secondary"}>Registrar</button>
-                    <Link href={'/'} className={"btn-confirm"}>Logar</Link>
-                </form>
+                <FormLogin/>
             )}
-        </>
+        </div>
     )
 }
 

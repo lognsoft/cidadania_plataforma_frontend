@@ -2,7 +2,7 @@ main{
   @apply h-screen flex items-center justify-center
 }
 .form{
-  @apply flex flex-col items-center gap-10;
+  @apply flex flex-col items-center justify-center gap-10;
 }
 
 /*.form-login{*/

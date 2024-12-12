@@ -1,6 +1,12 @@
 "use client";
 import {useRouter, useSearchParams} from "next/navigation";
 import {FormEvent, useEffect, useMemo, useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Checkbox} from "@/components/ui/checkbox";
+import FormFamilyTree from "@/components/FormFamilyTree";
+import FormParantsTree from "@/components/FormParantsTree";
 
 const TreePage = () => {
     const router = useRouter();
@@ -21,10 +27,6 @@ const TreePage = () => {
         }
     }, [paramsMemo]);
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>){
-        e.preventDefault();
-        router.push('/tree/?etapa=etapa3');
-    }
 
     return (
         <main>
@@ -32,80 +34,18 @@ const TreePage = () => {
                 <div className={''}>
                     <h2>Conhece o sujeito?</h2>
                     <div className={'sujeito-confirm'}>
-                        <button onClick={() => router.push('/tree/?etapa=etapa2')} className={"btn-confirm"}>Sim</button>
-                        <button onClick={() => router.push('/tree/?etapa=etapa3')} className={"btn-secondary"}>Não</button>
+                        <Button onClick={() => router.push('/tree/?etapa=etapa2')} className={"btn-confirm"}>Sim</Button>
+                        <Button onClick={() => router.push('/tree/?etapa=etapa3pnpm dlx shadcn@latest init\n')} className={"btn-secondary"}>Não</Button>
                     </div>
                 </div>
             )}
 
             { etapa === "etapa2" && (
-                <div>
-                    <form onSubmit={handleSubmit} className="form form-parents">
-                        <div className={'form-group'}>
-                            <label className={'input-wrapper'}>
-                                Trisavo
-                                <input className={'form-control'} type={'radio'} name={'root'} value={'trisavo'}/>
-                            </label>
-                            <label className={'input-wrapper'}>
-                                Bisavo
-                                <input className={'form-control'} type={'radio'} name={'root'} value={'bisavo'}/>
-                            </label>
-                            <label className={'input-wrapper'}>
-                                Vo
-                                <input className={'form-control'} type={'radio'} name={'root'} value={'vo'}/>
-                            </label>
-                            <label className={'input-wrapper'}>
-                                Pai
-                                <input className={'form-control'} type={'radio'} name={'root'} value={'pai'}/>
-                            </label>
-                        </div>
-                        <button type={'submit'} className={"btn-confirm"}>Confirmar</button>
-                    </form>
-                </div>
+                <FormParantsTree/>
             )}
 
             { etapa === "etapa3" && (
-                <div>
-                    <form className={'form form-tree'}>
-                        <label className={'input-wrapper'}>
-                            Nome*
-                            <input className={'form-control'} type='text' name={'name'} required/>
-                        </label>
-                        <label className={'input-wrapper'}>
-                            Data de nascimento*
-                            <input className={'form-control'} type='text' name={'nascimento'} required/>
-                        </label>
-                        <label className={'input-wrapper'}>
-                            Local de nascimento*
-                            <input className={'form-control'} type='text' name={'local_nascimento'} required/>
-                        </label>
-                        <label className={'input-wrapper'}>
-                            Certidão de nascimento*
-                            <input className={'form-control'} type='text' name={'certidao'} required/>
-                        </label>
-                        <label className={'input-wrapper'}>
-                            Certidão de casamento
-                            <input className={'form-control'} type='text' name={'casamento'} required/>
-                        </label>
-                        <label className={'input-wrapper'}>
-                            Obituário
-                            <input className={'form-control'} type='text' name={'obito'} required/>
-                        </label>
-                        <div className={'container-wrapper'}>
-                            <h3 className={'title-form-h3'}>Sexo*</h3>
-                            <div className={'form-group'}>
-                                <label className={'input-gender'}>
-                                    Masculíno
-                                    <input className={'form-control'} type='radio' name={'sexo'} value={'M'} required/>
-                                </label>
-                                <label className={'input-gender'}>
-                                    Feminíno
-                                    <input className={'form-control'} type='radio' name={'sexo'} value={'F'} required/>
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <FormFamilyTree/>
             )}
         </main>
     )

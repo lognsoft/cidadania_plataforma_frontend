@@ -1,32 +1,36 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {useForm} from "react-hook-form";
 
 const   FormCountry = () => {
     const router = useRouter();
-
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+    const {handleSubmit, register} = useForm();
+    function onSubmit(data) {
+        console.log(data)
         router.push("/tree");
     }
 
     return (
-        <form className={'form form-country'} onSubmit={handleSubmit}>
+        <form className={'form form-country'} onSubmit={handleSubmit(onSubmit)}>
             <div className={'form-group'}>
                 <div className={"custom-radio"}>
-                    <label htmlFor={"brazil"}  className={''}>brasil </label>
-                    <input className={'form-control'} type='radio' name={'country'} value={'brazil'} id={"brazil"}/>
+                    <Label htmlFor={"brazil"}  className={''}>brasil </Label>
+                    <Input className={'form-control'} type='radio' {...register("country")} value={'brazil'} id={"brazil"}/>
                 </div>
                 <div className={"custom-radio"}>
-                    <label htmlFor={"italy"} className={''}>Italia</label>
-                    <input className={'form-control'} type='radio' name={'country'} value={'italy'} id={"italy"}/>
+                    <Label htmlFor={"italy"} className={''}>Italia</Label>
+                    <Input className={'form-control'} type='radio' {...register("country")} value={'italy'} id={"italy"}/>
                 </div>
                 <div className={"custom-radio"}>
-                    <label htmlFor={"france"} className={''}>França</label>
-                    <input className={'form-control'} type='radio' name={'country'} value={'france'} id={"france"}/>
+                    <Label htmlFor={"france"} className={''}>França</Label>
+                    <Input className={'form-control'} type='radio' {...register("country")} value={'france'} id={"france"}/>
                 </div>
             </div>
-            <button type={'submit'} className={"btn-confirm"}>confirmar</button>
+            <Button type={'submit'} className={"btn-confirm"}>confirmar</Button>
         </form>
     )
 }
