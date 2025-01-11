@@ -1,0 +1,38 @@
+.card-country{
+    @apply
+    w-full
+    max-w-[184px]
+    min-h-[188px]
+    rounded-2xl
+    border
+    mx-auto
+    cursor-pointer
+    duration-300
+    border-gray-light
+}
+
+.card-country[data-select="true"]{
+    @apply
+    bg-green-100
+    border-green-200
+}
+
+.card-country picture{
+    @apply block
+}
+
+.card-country picture .image-country{
+    @apply
+    w-auto
+    left-[50%]
+    -translate-x-[50%]
+    -translate-y-[19px]
+    relative
+    inline-block
+}
+
+.card-country h3{
+    @apply
+    font-bold
+    text-center
+}

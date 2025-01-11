@@ -1,14 +1,28 @@
 "use client";
+import "@/styles/country-card-component.css";
 import Image from "next/image";
 import type ICountryCard from "@/types/ICounrtyCard";
+import { useGlobalState } from "@/context/GlobalStates";
+import { useEffect } from "react";
 
 const CountryCard = ({ country }:{ country:ICountryCard }) => {
+    const { state, updateState } = useGlobalState();
+
+    function handleCountry(){
+        updateState({
+            register:{
+                ...state.register,
+                country: country.name
+            }
+        })
+    }
+
     return (
-        <div className="w-full max-w-[184px] min-h-[188px] rounded-2xl border mx-auto">
+        <div className="card-country" data-select={state.register.country === country.name} onClick={handleCountry}>
             <picture className="block">
-                <Image className="left-[50%] -translate-x-[50%] -translate-y-[19px] relative inline-block" src={country.image} width={135} height={121} alt={country.name}/>
+                <Image className="image-country" src={country.image} width={135} height={121} alt={country.name}/>
             </picture>
-            <h3 className="font-bold text-center">{ country.name }</h3>
+            <h3>{ country.name }</h3>
         </div>
     )
 }

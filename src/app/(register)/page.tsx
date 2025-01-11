@@ -12,7 +12,7 @@ const RegisterPage = () => {
             <div className="center">
                 <RegisterContainer className="grid-presentation">
                     <div className="container-image">
-                        <Image className="w-full" src="/images/presentation.svg" width={453} height={373} alt="mascote"/>
+                        <Image className="w-auto" src="/images/presentation.svg" width={453} height={373} alt="mascote" priority/>
                     </div>
                     <div className="w-full max-w-[421px]">
                         <h1 className="presentation-title">O jeito fácil de confirmar a descendência e conseguir sua cidadania!</h1>

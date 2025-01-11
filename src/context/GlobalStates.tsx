@@ -7,7 +7,7 @@ export type GlobalState = {
     howDidYouFind: string;
     register: {
         country: string | undefined;
-        gender: "M" | "F" | undefined;
+        gender: "M" | "F" | "IDK" | undefined;
         kinship: string | undefined;
     };
 };

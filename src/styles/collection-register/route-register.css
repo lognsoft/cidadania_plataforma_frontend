@@ -110,3 +110,58 @@
     block
     mb-[28px]
 }
+
+/* gender */
+.register-page.gender{
+    @apply
+    grid
+    grid-cols-2
+    gap-y-[21px]
+    gap-x-[20px]
+    font-bold
+}
+
+.register-page.gender .button{
+    @apply
+    flex
+    items-center
+    gap-x-2
+    rounded-xl
+    px-[10px]
+    py-[7px]
+    border
+    cursor-pointer
+}
+
+.register-page.gender .button.sub-menu{
+    @apply
+    justify-between
+    relative
+}
+
+.register-page.gender .sub-menu-options{
+    @apply
+    absolute
+    top-full
+    w-full
+    left-0
+    py-[9px]
+    flex
+    flex-col
+    items-end
+    gap-y-[9px]
+}
+
+.register-page.gender .sub-menu-options .gender-option{
+    @apply
+    w-full
+    max-w-[261px]
+    rounded-xl
+    border
+    h-[42px]
+    flex
+    items-center
+    justify-start
+    px-[10px]
+    cursor-pointer
+}

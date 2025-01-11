@@ -27,7 +27,6 @@ const NextStepComponent = ({ text, href, observable}:INextStepComponentProps) =>
             return path.split('.').reduce((acc, key) => acc && acc[key], obj);
         };
         const value = getValue(state, observable);
-        console.log(value);
         if(value !== undefined && value !== ""){
             setDisabled(false);
             return;

@@ -15,6 +15,7 @@
     w-full
     max-w-[138px]
     mx-auto
+    duration-300
 }
 
 .card-rooteasy[data-select="true"]{

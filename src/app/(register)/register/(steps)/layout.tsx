@@ -1,6 +1,6 @@
 import AsideRegister from "@/components/AsideRegister";
 import ProgressStep from "@/components/ProgressStep";
-import NextStepComponent from "@/components/NextStep";
+import NextStepControl from "@/components/NextStepControl";
 
 const StepRoot = ({ children }:{ children:React.ReactNode }) => {
     return (
@@ -16,7 +16,7 @@ const StepRoot = ({ children }:{ children:React.ReactNode }) => {
                             { children }
                         </div>
                     </div>
-                    <NextStepComponent text="Continuar" href="/register/country" observable="howDidYouFind"/>
+                    <NextStepControl/>
                 </div>
             </div>
         </div>

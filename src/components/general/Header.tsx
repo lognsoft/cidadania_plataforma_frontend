@@ -11,6 +11,7 @@ const Header = () => {
                 <nav className="header-container">
                     <Link href="/">
                         <Image
+                            className="w-auto"
                             src="/images/logo.svg"
                             width="156"
                             height="66"

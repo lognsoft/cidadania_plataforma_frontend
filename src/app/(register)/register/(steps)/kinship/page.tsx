@@ -34,7 +34,7 @@ export default function PageKinship(){
                 ))} */}
                 {kinshipOptions.map((kinship) => (
                     <div key={kinship.title}>
-                        <div className="mx-auto flex flex-col gap-y-2 justify-center w-full max-w-[138px] min-h-[108px] border px-[13px] py-[14px] rounded-lg">
+                        <div className="mx-auto flex flex-col gap-y-2 justify-center w-full max-w-[138px] min-h-[108px] border px-[13px] py-[14px] rounded-lg cursor-pointer">
                             <figure>
                                 <Image src="/images/icons/icon-bullet.svg" alt="" width={22} height={22}/>
                             </figure>
