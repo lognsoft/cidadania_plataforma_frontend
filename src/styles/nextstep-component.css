@@ -1,0 +1,6 @@
+.next-step{
+    @apply
+    flex
+    items-center
+    justify-end
+}

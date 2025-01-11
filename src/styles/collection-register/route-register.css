@@ -1,0 +1,112 @@
+#register-page{
+    @apply
+    flex
+    flex-col
+    h-full
+}
+
+#register-page .app-presentation{
+    @apply
+    flex
+    items-center
+    h-full
+}
+
+#register-page .app-presentation main{
+    @apply
+    w-full
+}
+
+#register-page .app-presentation main .grid-presentation{
+    @apply
+    flex
+    items-center
+    justify-between
+}
+
+/* image */
+#register-page .app-presentation main .grid-presentation .container-image{
+    @apply
+    w-full
+    max-w-[453px]
+}
+/* end image */
+
+#register-page .app-presentation main .grid-presentation .presentation-title{
+    @apply
+    font-lilita
+    text-title-h1
+    text-wine
+    mb-[33px]
+}
+
+#register-page .app-presentation main .grid-presentation .presentation-actions{
+    @apply
+    flex
+    flex-col
+    gap-y-[7px]
+}
+
+#register-page .app-presentation main .grid-presentation .presentation-actions button{
+    @apply
+    w-[202px]
+    h-[40px]
+    font-semibold
+}
+
+
+#register-page .app-presentation main#step-view{
+    @apply
+    h-full
+    pt-[106px]
+}
+
+
+#register-page .app-presentation main#step-view .grid-aside{
+    @apply
+    grid
+    grid-cols-4
+}
+
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title{
+    @apply
+    col-span-1
+    flex
+    flex-wrap
+    items-end
+    gap-5
+}
+
+#register-page .app-presentation main#step-view .grid-aside aside > h1,
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title > h1{
+    @apply
+    font-lilita
+    text-title-h1
+    leading-8
+}
+
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title > h1{
+    @apply
+    max-w-[100px]
+    text-wine
+}
+
+#register-page .app-presentation main#step-view .grid-aside aside p{
+    @apply
+    w-full
+    font-semibold
+    mt-[25px]
+}
+
+#register-page .app-presentation main#step-view .grid-aside .content{
+    @apply
+    col-span-3
+    pl-[80px]
+}
+
+/* countrys */
+#register-page .app-presentation main#step-view .grid-aside aside > picture{
+    @apply
+    block
+    mb-[28px]
+}

@@ -1,0 +1,11 @@
+#default-header{
+    @apply
+    py-[23px]
+}
+
+#default-header .header-container{
+    @apply
+    flex
+    items-center
+    justify-between
+}

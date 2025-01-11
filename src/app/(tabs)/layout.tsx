@@ -1,8 +1,12 @@
+import Header from "@/components/general/Header";
 
-const DefaultLayout = ({ children }:{ children:React.ReactNode }) => {
+const TabRoot = ({ children }:{ children:Readonly<React.ReactNode> }) => {
     return (
-        <>{ children }</>
+        <>
+            <Header/>
+            { children }
+        </>
     )
 }
 
-export default DefaultLayout;
+export default TabRoot;
