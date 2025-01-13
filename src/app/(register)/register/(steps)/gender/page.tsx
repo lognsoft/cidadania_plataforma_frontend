@@ -2,10 +2,14 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
-import { useGlobalState } from "@/context/GlobalStates";
+
+import { type RootState, type AppDispatch } from "@/stores/store";
+import { useSelector, useDispatch } from "react-redux";
+import { updateState } from "@/stores/features/storeRegister";
 
 export default function GenderPage(){
-    const { state, updateState } = useGlobalState();
+    const state = useSelector((rootState:RootState) => rootState.register);
+    const dispatch = useDispatch<AppDispatch>();
     const btnSubMenu = useRef<HTMLDivElement | null>(null);
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -21,12 +25,12 @@ export default function GenderPage(){
     }
 
     function handlerSelectGender(gender:"M" | "F" | "IDK"){
-        updateState({
+        dispatch(updateState({
             register:{
                 ...state.register,
                 gender: gender
             }
-        });
+        }));
     }
 
     useEffect(() => {
@@ -39,7 +43,7 @@ export default function GenderPage(){
     return (
         <>
             <div className="register-page gender">
-                <div ref={ btnSubMenu } className="button sub-menu">
+                <div ref={ btnSubMenu } className="button sub-menu" data-select={(state.register.gender === "M" || state.register.gender === "F")}>
                     <div className="flex items-center gap-x-2">
                         <Image src="/images/icons/emoji-smile.svg" alt="" width={28} height={28}/>
                         <span>Sim, eu sei!</span>
@@ -47,12 +51,12 @@ export default function GenderPage(){
                     <Icon icon="mi:chevron-down"/>
                     {toggle && (
                         <div className="sub-menu-options">
-                            <div className="gender-option" onClick={() => handlerSelectGender("M")}>Homem</div>
-                            <div className="gender-option" onClick={() => handlerSelectGender("F")}>Mulher</div>
+                            <div className="gender-option" onClick={() => handlerSelectGender("M")} data-select={state.register.gender === "M"}>Homem</div>
+                            <div className="gender-option" onClick={() => handlerSelectGender("F")} data-select={state.register.gender === "F"}>Mulher</div>
                         </div>
                     )}
                 </div>
-                <div className="button" onClick={() => handlerSelectGender("IDK")}>
+                <div className="button" onClick={() => handlerSelectGender("IDK")} data-select={state.register.gender === "IDK"}>
                     <Image src="/images/icons/emoji-sad.svg" alt="" width={28} height={28}/>
                     <span>Eu não sei!</span>
                 </div>

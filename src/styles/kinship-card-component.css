@@ -1,0 +1,23 @@
+.kinship-card{
+    @apply
+    mx-auto
+    flex
+    flex-col
+    gap-y-2
+    justify-center
+    w-full
+    max-w-[138px]
+    min-h-[108px]
+    border
+    px-[13px]
+    py-[14px]
+    rounded-lg
+    cursor-pointer
+    border-gray-light
+}
+
+.kinship-card[data-select="true"]{
+    @apply
+    bg-green-100
+    border-green-200
+}

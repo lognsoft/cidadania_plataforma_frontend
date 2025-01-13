@@ -1,6 +1,8 @@
 import Image from "next/image";
+import type IKinshipCard from "@/types/IKinshipCard";
+import KinshipCard from "@/components/cards/KinshipCard";
 
-const kinshipOptions:{title:string, subtitle:string}[] = [
+const kinshipOptions:IKinshipCard[] = [
     {
         title: 'Trisavô',
         subtitle: 'Pai do seu Bisavô'
@@ -33,16 +35,8 @@ export default function PageKinship(){
                     </div>
                 ))} */}
                 {kinshipOptions.map((kinship) => (
-                    <div key={kinship.title}>
-                        <div className="mx-auto flex flex-col gap-y-2 justify-center w-full max-w-[138px] min-h-[108px] border px-[13px] py-[14px] rounded-lg cursor-pointer">
-                            <figure>
-                                <Image src="/images/icons/icon-bullet.svg" alt="" width={22} height={22}/>
-                            </figure>
-                            <div>
-                                <h4 className="font-lilita text-twenty">{ kinship.title }</h4>
-                                <span className="text-mini block -mt-1 font-bold text-gray-3">{ kinship.subtitle }</span>
-                            </div>
-                        </div>
+                    <div>
+                        <KinshipCard key={kinship.title} kinship={kinship}/>
                     </div>
                 ))}
             </div>

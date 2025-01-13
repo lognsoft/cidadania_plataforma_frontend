@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import NextStepComponent from "./NextStep";
 import { useEffect, useState } from "react";
 
-const attrObservale:{ path:string, nextPath:string, attr:string }[] = [
+const attrObservale:INextStepControl[] = [
     {
         path: '/register/country',
         nextPath: '/register/gender',
@@ -22,11 +22,11 @@ const attrObservale:{ path:string, nextPath:string, attr:string }[] = [
 ];
 const NextStepControl = () => {
     const pathname = usePathname();
-    const [page, setPage] = useState<{ path:string, nextPath:string, attr:string }>(attrObservale[0]);
+    const [page, setPage] = useState<INextStepControl>(attrObservale[0]);
 
     useEffect(() => {
 
-        const newPage: { path:string, nextPath:string, attr:string } | undefined = attrObservale.find((item) => {
+        const newPage: INextStepControl | undefined = attrObservale.find((item) => {
             if(item.path === pathname){
                 return item;
             }

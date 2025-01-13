@@ -3,19 +3,21 @@ import "@/styles/nextstep-component.css";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { useGlobalState, type GlobalState } from "@/context/GlobalStates";
+import type { RegisterState } from "@/stores/features/storeRegister";
+import { type RootState } from "@/stores/store";
+import { useSelector } from "react-redux";
 
 type DeepKeyOf<T> = T extends object ? { [K in keyof T]: `${K & string}` | `${K & string}.${DeepKeyOf<T[K]>}` }[keyof T] : never;
 
 interface INextStepComponentProps{
     text:string;
     href:string;
-    observable: DeepKeyOf<GlobalState> | string
+    observable: DeepKeyOf<RegisterState> | string
 }
 
 const NextStepComponent = ({ text, href, observable}:INextStepComponentProps) => {
+    const state = useSelector((state:RootState) => state.register);
     const [disabled, setDisabled] = useState<boolean>(true);
-    const { state } = useGlobalState();
     const route = useRouter();
 
     function navigateTo(): void {

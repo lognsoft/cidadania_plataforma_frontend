@@ -3,7 +3,9 @@ import { HTMLAttributes } from "react"
 import type IRootEasy from "@/types/IRootEasyAdd";
 import Image from "next/image";
 import "@/styles/root-easy-component.css";
-import { useGlobalState } from "@/context/GlobalStates";
+import { useSelector, useDispatch } from "react-redux";
+import { type RootState, type AppDispatch } from "@/stores/store";
+import { updateState } from "@/stores/features/storeRegister";
 
 interface CardRooteasyProps extends HTMLAttributes<HTMLDivElement>{
     data: IRootEasy,
@@ -11,16 +13,17 @@ interface CardRooteasyProps extends HTMLAttributes<HTMLDivElement>{
 }
 
 const CardRooteasy = ({ data, className = '', ...props }:CardRooteasyProps) => {
-    const { state, updateState } = useGlobalState();
+    const howDidYouFind = useSelector((state:RootState) => state.register.howDidYouFind);
+    const dispatch = useDispatch<AppDispatch>();
 
     function HowDidYouFind(){
-        updateState({
+        dispatch(updateState({
             howDidYouFind: data.text
-        })
+        }))
     }
 
     return (
-        <div className={`card-rooteasy ${className}`} onClick={HowDidYouFind} data-select={ state.howDidYouFind === data.text } { ...props }>
+        <div className={`card-rooteasy ${className}`} onClick={HowDidYouFind} data-select={ howDidYouFind === data.text } { ...props }>
             <picture>
                 <Image src={data.icon} width={data.width} height={data.height} alt={data.text} priority/>
             </picture>

@@ -2,19 +2,21 @@
 import "@/styles/country-card-component.css";
 import Image from "next/image";
 import type ICountryCard from "@/types/ICounrtyCard";
-import { useGlobalState } from "@/context/GlobalStates";
-import { useEffect } from "react";
+import { type RootState, type AppDispatch } from "@/stores/store";
+import { useSelector, useDispatch } from "react-redux";
+import { updateState } from "@/stores/features/storeRegister";
 
 const CountryCard = ({ country }:{ country:ICountryCard }) => {
-    const { state, updateState } = useGlobalState();
+    const state = useSelector((rootState:RootState) => rootState.register);
+    const dispatch = useDispatch<AppDispatch>();
 
     function handleCountry(){
-        updateState({
+        dispatch(updateState({
             register:{
                 ...state.register,
                 country: country.name
             }
-        })
+        }))
     }
 
     return (
