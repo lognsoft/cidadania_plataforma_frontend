@@ -7,6 +7,7 @@ export type RegisterState = {
         gender: "M" | "F" | "IDK" | undefined;
         kinship: string | undefined;
     };
+    terms: boolean
 };
 
 const initialState:RegisterState = {
@@ -16,6 +17,7 @@ const initialState:RegisterState = {
         gender: undefined,
         kinship: undefined,
     },
+    terms: false
 }
 
 const registerNewUser = createSlice({

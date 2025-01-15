@@ -18,6 +18,11 @@ const attrObservale:INextStepControl[] = [
         path: '/register/kinship',
         nextPath: '/register/confirm',
         attr: 'register.kinship'
+    },
+    {
+        path: '/register/confirm',
+        nextPath: '/register/confirm',
+        attr: 'terms'
     }
 ];
 const NextStepControl = () => {

@@ -132,6 +132,7 @@
     border
     cursor-pointer
     border-gray-light
+    duration-300
 }
 
 .register-page.gender .button.sub-menu{
@@ -166,6 +167,7 @@
     px-[10px]
     cursor-pointer
     border-gray-light
+    duration-300
 }
 
 .register-page.gender .button[data-select="true"],

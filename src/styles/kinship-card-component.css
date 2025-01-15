@@ -14,6 +14,7 @@
     rounded-lg
     cursor-pointer
     border-gray-light
+    duration-300
 }
 
 .kinship-card[data-select="true"]{

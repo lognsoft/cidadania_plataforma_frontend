@@ -16,7 +16,7 @@ const CountryCard = ({ country }:{ country:ICountryCard }) => {
                 ...state.register,
                 country: country.name
             }
-        }))
+        }));
     }
 
     return (

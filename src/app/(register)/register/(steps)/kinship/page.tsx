@@ -35,7 +35,7 @@ export default function PageKinship(){
                     </div>
                 ))} */}
                 {kinshipOptions.map((kinship) => (
-                    <div>
+                    <div key={kinship.title}>
                         <KinshipCard key={kinship.title} kinship={kinship}/>
                     </div>
                 ))}
