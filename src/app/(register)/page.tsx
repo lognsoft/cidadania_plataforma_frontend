@@ -10,18 +10,18 @@ const RegisterPage = () => {
     return (
         <main>
             <div className="center">
-                <RegisterContainer className="grid-presentation">
+                <div className="grid-presentation">
                     <div className="container-image">
                         <Image className="w-auto" src="/images/presentation.svg" width={453} height={373} alt="mascote" priority/>
                     </div>
-                    <div className="w-full max-w-[421px]">
+                    <div className="w-full md:max-w-[421px]">
                         <h1 className="presentation-title">O jeito fácil de confirmar a descendência e conseguir sua cidadania!</h1>
                         <div className="presentation-actions">
                             <ButtonVariantShadow variant={'pink'} onClick={() => router.push('/register')}>Confirmar agora!</ButtonVariantShadow>
                             <ButtonVariantShadow variant={'gray-light'}>Acessar minha conta</ButtonVariantShadow>
                         </div>
                     </div>
-                </RegisterContainer>
+                </div>
             </div>
         </main>
     )

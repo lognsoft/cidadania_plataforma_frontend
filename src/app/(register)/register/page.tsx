@@ -71,7 +71,7 @@ function RegisterPage(){
     return (
         <>
             <RegisterContainer className="grid-aside">
-                <aside>
+                <aside className="hidden md:block">
                     <div>
                         <div className="aside-title">
                             <picture>
@@ -84,7 +84,7 @@ function RegisterPage(){
                 </aside>
                 <div className="content">
                     <div className="content-container">
-                        <div className="register-page grid grid-cols-4 gap-y-[21px] mb-[52px]">
+                        <div className="register-page more-before">
                             {rootesay_add.map((data) => (
                                 <div key={data.icon}>
                                     <CardRooteasy data={data}/>

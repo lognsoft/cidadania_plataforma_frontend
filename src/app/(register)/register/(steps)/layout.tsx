@@ -9,7 +9,9 @@ const StepRoot = ({ children }:{ children:React.ReactNode }) => {
                 <ProgressStep/>
             </header>
             <div className="grid-aside">
-                <AsideRegister/>
+                <div className="hidden md:block">
+                    <AsideRegister/>
+                </div>
                 <div className="content pt-[57px]">
                     <div className="content-container min-h-[398px]">
                         <div>

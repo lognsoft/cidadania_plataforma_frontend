@@ -24,7 +24,7 @@ const registerNewUser = createSlice({
     name: 'register',
     initialState,
     reducers:{
-        updateState(state, action:PayloadAction<Partial<RegisterState>>){
+        updateState(state:RegisterState, action:PayloadAction<Partial<RegisterState>>){
             Object.assign(state, {
                 ...action.payload,
                 register:{
@@ -32,10 +32,22 @@ const registerNewUser = createSlice({
                     ...(action.payload.register || {})
                 }
             })
+
+            localStorage.setItem("register", JSON.stringify(state));
+        },
+        verifyStorageRegister(state:RegisterState){
+            const registerStorage:string | null = localStorage.getItem("register");
+            
+            if(registerStorage){
+                const registerState:RegisterState = JSON.parse(registerStorage);
+                state.howDidYouFind = registerState.howDidYouFind;
+                state.register = registerState.register;
+                state.terms = registerState.terms;
+            }
         }
     }
 });
 
-export const { updateState } = registerNewUser.actions;
+export const { updateState, verifyStorageRegister } = registerNewUser.actions;
 export default registerNewUser.reducer;
 

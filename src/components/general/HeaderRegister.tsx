@@ -4,7 +4,7 @@ import Image from "next/image";
 import "@/styles/header-component.css";
 import SelectLanguage from "@/components/SelectLanguage";
 
-const Header = () => {
+const HeaderRegister = () => {
     return (
         <header id="default-header">
             <div className="center">
@@ -19,11 +19,13 @@ const Header = () => {
                             priority
                         />
                     </Link>
-                    <SelectLanguage/>
+                    <div className="hidden md:block relative -z-20">
+                        <SelectLanguage/>
+                    </div>
                 </nav>
             </div>
         </header>
     )
 }
 
-export default Header;
+export default HeaderRegister;

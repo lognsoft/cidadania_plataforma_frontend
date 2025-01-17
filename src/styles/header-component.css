@@ -7,5 +7,12 @@
     @apply
     flex
     items-center
-    justify-between
+    justify-center
+    md:justify-between
+}
+
+#default-header .header-container img{
+    @apply
+    h-auto
+    w-auto
 }

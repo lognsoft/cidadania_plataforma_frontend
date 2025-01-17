@@ -29,6 +29,8 @@
     @apply
     w-full
     max-w-[453px]
+    hidden
+    md:block
 }
 /* end image */
 
@@ -38,11 +40,19 @@
     text-title-h1
     text-wine
     mb-[33px]
+    w-full
+    max-w-[210px]
+    md:max-w-none
+    mx-auto
+    text-center
+    md:text-start
 }
 
 #register-page .app-presentation main .grid-presentation .presentation-actions{
     @apply
     flex
+    items-center
+    md:items-start
     flex-col
     gap-y-[7px]
 }
@@ -66,6 +76,7 @@
     @apply
     grid
     grid-cols-4
+    gap-x-1
 }
 
 #register-page .app-presentation main#step-view .grid-aside aside .aside-title{
@@ -100,8 +111,10 @@
 
 #register-page .app-presentation main#step-view .grid-aside .content{
     @apply
-    col-span-3
-    pl-[80px]
+    col-span-4
+    pl-0
+    md:col-span-3
+    md:pl-[80px]
 }
 
 /* countrys */
@@ -109,6 +122,17 @@
     @apply
     block
     mb-[28px]
+}
+
+/* more before */
+.register-page.more-before{
+    @apply
+    grid
+    grid-cols-2
+    sm:grid-cols-4
+    gap-y-[21px]
+    mb-[52px]
+    gap-x-1
 }
 
 /* gender */

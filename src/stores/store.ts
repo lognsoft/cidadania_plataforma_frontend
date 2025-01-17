@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import registerReduce from "@/stores/features/storeRegister";
+import languageStore from "@/stores/features/storeLanguage";
 
 export const store = configureStore({
     reducer:{
-        register: registerReduce
+        register: registerReduce,
+        translate: languageStore
     }
 });
 
