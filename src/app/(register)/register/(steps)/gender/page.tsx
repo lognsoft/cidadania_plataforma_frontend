@@ -32,11 +32,7 @@ export default function GenderPage(){
 
     useEffect(() => {
         setGender(state.register.gender);
-        if(state.register.gender === "F" || state.register.gender === "M"){
-            setToggle(true);
-        } else {
-            setToggle(false);
-        }
+        setToggle(false);
     },[state.register.gender])
 
     return (
@@ -45,7 +41,14 @@ export default function GenderPage(){
                 <div className="button sub-menu" onClick={handlerOpenOptionGenre} data-select={(gender === "M" || gender === "F")}>
                     <div className="flex items-center gap-x-2">
                         <Image src="/images/icons/emoji-smile.svg" alt="" width={28} height={28}/>
-                        <span>Sim, eu sei!</span>
+                        <span>
+                            { gender === "IDK" || gender === undefined
+                            ?
+                            (<>Sim, eu sei!</>)
+                            :
+                            gender === "F" ? (<>Mulher</>) : (<>Homem</>)
+                            }
+                        </span>
                     </div>
                     <Icon icon="mi:chevron-down"/>
                     {toggle && (
