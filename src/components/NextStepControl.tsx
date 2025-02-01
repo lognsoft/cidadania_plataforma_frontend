@@ -1,30 +1,13 @@
 "use client";
 import { usePathname } from "next/navigation";
-import NextStepComponent from "./NextStep";
+// import NextStepComponent from "./NextStep";
 import { useEffect, useState } from "react";
+import type INextStepControl from "@/types/INextStepControl";
+import { attrObservale } from "@/constants/CStepControl";
+import dynamic from "next/dynamic";
 
-const attrObservale:INextStepControl[] = [
-    {
-        path: '/register/country',
-        nextPath: '/register/gender',
-        attr: 'register.country'
-    },
-    {
-        path: '/register/gender',
-        nextPath: '/register/kinship',
-        attr: 'register.gender'
-    },
-    {
-        path: '/register/kinship',
-        nextPath: '/register/confirm',
-        attr: 'register.kinship'
-    },
-    {
-        path: '/register/confirm',
-        nextPath: '/register/confirm',
-        attr: 'terms'
-    }
-];
+const NextStepComponent = dynamic(() => import("@/components/next-step/NextStep"),{ ssr: false });
+
 const NextStepControl = () => {
     const pathname = usePathname();
     const [page, setPage] = useState<INextStepControl>(attrObservale[0]);

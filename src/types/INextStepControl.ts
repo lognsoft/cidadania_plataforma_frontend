@@ -3,3 +3,5 @@ interface INextStepControl {
     nextPath:string;
     attr:string;
 }
+
+export default INextStepControl;

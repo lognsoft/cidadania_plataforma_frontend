@@ -9,7 +9,7 @@
     flex-col
     gap-y-3
     border
-    border-gray-light
+    border-gray-light-primary
     cursor-pointer
     min-h-[108px]
     w-full

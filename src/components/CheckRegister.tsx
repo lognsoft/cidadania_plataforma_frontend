@@ -9,7 +9,7 @@ const CheckRegister = ({ label, children }:ICheckRegisterProps) => {
     return (
         <div>
             <div className="inline-flex items-center gap-3">
-                <div className="inline-flex border border-gray-light h-[45px] px-[10px] rounded-lg">
+                <div className="inline-flex border border-gray-light-primary h-[45px] px-[10px] rounded-lg">
                     <div className="flex items-center gap-1">
                         <span className="font-bold block">{ label }</span>
                         <span className="flex items-center gap-2">{ children }</span>

@@ -1,4 +1,4 @@
-import CountryCard from "@/components/cards/CountryCard";
+import CountryCard from "@/components/cards/country-card/CountryCard";
 import type { Metadata } from "next";
 import type ICountryCard from "@/types/ICounrtyCard";
 
@@ -23,15 +23,15 @@ const countrys:ICountryCard[] = [
 
 const CountryPage = () => {
     return (
-        <>
-            <div className="register-page grid grid-cols-3 gap-y-[21px] gap-x-2">
+        <div className="center">
+            <div className="register-page grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-2">
                 {countrys.map((country) => (
-                    <div className="flag" key={country.name}>
+                    <div className="flag px-[10px]" key={country.name}>
                         <CountryCard country={country}/>
                     </div>
                 ))}
             </div>
-        </>
+        </div>
     )
 }
 

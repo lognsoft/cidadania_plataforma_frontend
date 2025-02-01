@@ -2,13 +2,14 @@
     @apply
     w-full
     max-w-[184px]
-    min-h-[188px]
+    md:min-h-[188px]
+    aspect-square
     rounded-2xl
     border
     mx-auto
     cursor-pointer
     duration-300
-    border-gray-light
+    border-gray-light-primary
 }
 
 .card-country[data-select="true"]{
@@ -18,12 +19,17 @@
 }
 
 .card-country picture{
-    @apply block
+    @apply
+    block
+    px-5
+    sm:px-3
+    md:px-0
 }
 
 .card-country picture .image-country{
     @apply
     w-auto
+    h-auto
     left-[50%]
     -translate-x-[50%]
     -translate-y-[19px]

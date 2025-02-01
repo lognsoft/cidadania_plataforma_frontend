@@ -1,7 +1,7 @@
 "use client";
-import "@/styles/nextstep-component.css";
+import "@/components/next-step/nextstep-component.css";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import type { RegisterState } from "@/stores/features/storeRegister";
 import { type RootState } from "@/stores/store";
@@ -21,6 +21,10 @@ const NextStepComponent = ({ text, href, observable}:INextStepComponentProps) =>
     const route = useRouter();
 
     function navigateTo(): void {
+        if(observable === "terms"){
+            alert("Registrado")
+            return;
+        }
         route.push(href);
     }
 

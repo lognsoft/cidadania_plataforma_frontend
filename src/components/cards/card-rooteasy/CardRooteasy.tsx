@@ -2,7 +2,7 @@
 import { HTMLAttributes } from "react"
 import type IRootEasy from "@/types/IRootEasyAdd";
 import Image from "next/image";
-import "@/styles/root-easy-component.css";
+import "@/components/cards/card-rooteasy/root-easy-component.css";
 import { useSelector, useDispatch } from "react-redux";
 import { type RootState, type AppDispatch } from "@/stores/store";
 import { updateState } from "@/stores/features/storeRegister";

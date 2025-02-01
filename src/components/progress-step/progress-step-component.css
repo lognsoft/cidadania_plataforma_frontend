@@ -1,11 +1,16 @@
 .progress-component{
     @apply
     w-full
-    max-w-[608px]
+    md:max-w-[608px]
     flex
     items-center
-    justify-between
+    justify-center
+    md:justify-between
     gap-x-3
+    px-5
+    md:px-0
+    pb-10
+    md:pb-0
 }
 
 .progress{
@@ -14,14 +19,14 @@
     max-w-[432px]
     h-[18px]
     border
-    border-gray-3
+    border-gray-tertiary
     rounded-full
     shadow-md
 }
 
 .progress .progress-bar{
     @apply
-    bg-wine-2
+    bg-wine-secondary
     h-full
     w-[25%]
     rounded-full
@@ -36,7 +41,7 @@
     h-[27px]
     top-[50%]
     -translate-y-[50%]
-    bg-green-2
+    bg-green-primary
     text-white
     right-0
     translate-x-[50%]

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "@/stores/store";
 import { verifyStorageRegister } from "@/stores/features/storeRegister";
@@ -14,6 +14,7 @@ const ContainerRegister = ({ children }:IContainerRegister) => {
     const router = useRouter();
     const stateRegister = useSelector((rootState:RootState) => rootState.register);
     const dispatch = useDispatch<AppDispatch>()
+    const hasRedirect = useRef<boolean>(false);
 
     function loadingStateStorage(){
         let definedInputs:number = 0;
@@ -28,6 +29,7 @@ const ContainerRegister = ({ children }:IContainerRegister) => {
 
     function redirectPage(inputs:number){
         if(inputs > 0){
+            
             switch(inputs){
                 case 1:
                     router.push('/register/country');
@@ -47,11 +49,14 @@ const ContainerRegister = ({ children }:IContainerRegister) => {
 
     useEffect(() => {
         dispatch(verifyStorageRegister());
-        sleep(5000).then(() => {
-            console.log(stateRegister);
-        });
-        loadingStateStorage();
-    },[]);
+    },[dispatch]);
+
+    useEffect(() => {
+        if(!hasRedirect.current){
+            hasRedirect.current = true;
+            loadingStateStorage();
+        }
+    },[stateRegister]);
 
     return (
         <>

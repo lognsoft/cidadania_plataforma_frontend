@@ -2,5 +2,6 @@
     @apply
     flex
     items-center
-    justify-end
+    justify-center
+    md:justify-end
 }

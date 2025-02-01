@@ -3,7 +3,7 @@ import { Button } from "../ui/button"
 
 
 interface ButtonVariantProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'>{
-    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "pink" | "gray-light" | null | undefined,
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "pink" | "gray-light-primary" | null | undefined,
     shadow?:boolean
 }
 

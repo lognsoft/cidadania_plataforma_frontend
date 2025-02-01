@@ -20,9 +20,9 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         pink: "bg-chiclet text-white w-auto",
-        "gray-light": "bg-gray-light text-wine w-auto",
-        disabled: "bg-gray-2 text-gray-light-2 border-gray-2",
-        wine: "bg-wine text-white border-wine"
+        "gray-light-primary": "bg-gray-light-primary text-wine-primary w-auto",
+        disabled: "bg-gray-secondary text-gray-light-secondary border-gray-secondary",
+        wine: "bg-wine-primary text-white border-wine-primary"
       },
       size: {
         default: "h-9 px-4 py-2",

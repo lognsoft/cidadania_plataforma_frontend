@@ -2,6 +2,11 @@
     @apply
     py-[23px]
 }
+#default-header.mobile-response{
+    @apply
+    bg-gray-light-tertiary
+    md:bg-transparent;
+}
 
 #default-header .header-container{
     @apply
