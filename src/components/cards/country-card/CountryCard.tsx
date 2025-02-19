@@ -1,5 +1,5 @@
 "use client";
-import "@/components/country-card/country-card-component.css";
+import "@/components/cards/country-card/country-card-component.css";
 import Image from "next/image";
 import type ICountryCard from "@/types/ICounrtyCard";
 import { type RootState, type AppDispatch } from "@/stores/store";
