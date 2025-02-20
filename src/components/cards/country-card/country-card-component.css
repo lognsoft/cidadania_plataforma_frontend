@@ -1,6 +1,5 @@
-.card-country{
-    @apply
-    w-full
+.card-country {
+  @apply w-full
     max-w-[184px]
     md:min-h-[188px]
     aspect-square
@@ -9,36 +8,26 @@
     mx-auto
     cursor-pointer
     duration-300
-    border-gray-light-primary
+    border-gray-light-primary;
 }
 
-.card-country[data-select="true"]{
-    @apply
-    bg-green-100
-    border-green-200
+.card-country[data-select="true"] {
+  @apply bg-green-100
+    border-green-200;
 }
 
-.card-country picture{
-    @apply
-    block
+.card-country picture {
+  @apply block
     px-5
     sm:px-3
-    md:px-0
+    md:px-0;
 }
 
-.card-country picture .image-country{
-    @apply
-    w-auto
-    h-auto
-    left-[50%]
-    -translate-x-[50%]
-    -translate-y-[19px]
-    relative
-    inline-block
+.card-country picture .image-country {
+  @apply w-auto h-auto left-[50%] -translate-x-[50%] -translate-y-[19px] relative inline-block z-10;
 }
 
-.card-country h3{
-    @apply
-    font-bold
-    text-center
+.card-country h3 {
+  @apply font-bold
+    text-center;
 }
