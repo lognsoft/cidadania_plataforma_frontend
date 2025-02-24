@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
-} from "../ui/select";
+} from "@/components/ui/select";
 
 const SelectLanguage = () => {
   return (

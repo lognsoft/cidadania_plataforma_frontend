@@ -1,5 +1,5 @@
+import { MobileSelectLanguage } from "@/components/features/language-selection";
 import "./route-register.css";
-import MobileSelectLanguage from "@/components/mobile-select-language/MobileSelectLanguage";
 
 const TabRoot = ({ children }: { children: Readonly<React.ReactNode> }) => {
   return (

@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import SelectLanguage from "../select-language/SelectLanguage";
+import SelectLanguage from "../desktop/SelectLanguage";
 
 const MobileSelectLanguage = () => {
   const pathname = usePathname();

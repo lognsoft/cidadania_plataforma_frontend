@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import ProgressStep from "@/components/progress-step/ProgressStep";
+import ProgressStep from "@/components/features/progress/ProgressStep";
 import { stepsAside } from "@/constants/CAsideRegister";
 
 const ProgressWrapper = () => {

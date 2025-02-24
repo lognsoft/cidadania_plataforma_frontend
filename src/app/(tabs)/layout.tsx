@@ -1,4 +1,4 @@
-import Header from "@/components/common/header-register/HeaderRegister";
+import { Header } from "@/components/layout/header";
 
 const TabRoot = ({ children }: { children: Readonly<React.ReactNode> }) => {
   return (
