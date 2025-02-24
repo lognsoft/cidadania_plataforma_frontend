@@ -1,0 +1,51 @@
+.progress-component {
+  @apply w-full
+    md:max-w-[608px]
+    flex
+    items-center
+    justify-center
+    md:justify-between
+    gap-x-3
+    px-5
+    md:px-0
+    pb-10
+    md:pb-0;
+}
+
+.progress {
+  @apply w-full
+    max-w-[432px]
+    h-[18px]
+    border
+    border-gray-tertiary
+    rounded-full
+    shadow-md;
+}
+
+.progress .progress-bar {
+  @apply bg-wine-secondary
+    h-full
+    rounded-full
+    relative
+    transition-all duration-500 ease-in-out;
+}
+
+.progress .progress-bar::after {
+  content: attr(data-progress);
+  @apply absolute
+    w-[51px]
+    h-[27px]
+    top-[50%]
+    -translate-y-[50%]
+    bg-green-primary
+    text-white
+    right-0
+    translate-x-[50%]
+    flex
+    items-center
+    justify-center
+    rounded-full
+    text-medium
+    shadow-md
+    z-10;
+}

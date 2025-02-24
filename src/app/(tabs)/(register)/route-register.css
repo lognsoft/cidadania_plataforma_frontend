@@ -1,0 +1,229 @@
+#register-page{
+    @apply
+    flex
+    flex-col
+    h-full
+}
+
+#register-page .app-presentation{
+    @apply
+    flex
+    items-center
+    h-full
+}
+
+#register-page .app-presentation main{
+    @apply
+    w-full
+}
+
+#register-page .app-presentation main .grid-presentation{
+    @apply
+    flex
+    items-center
+    justify-between
+}
+
+/* image */
+#register-page .app-presentation main .grid-presentation .container-image{
+    @apply
+    w-full
+    max-w-[453px]
+    hidden
+    md:block
+}
+/* end image */
+
+#register-page .app-presentation main .grid-presentation .presentation-title{
+    @apply
+    font-lilita
+    text-title-h1
+    text-wine-primary
+    mb-[33px]
+    w-full
+    max-w-[210px]
+    md:max-w-none
+    mx-auto
+    text-center
+    md:text-start
+}
+
+#register-page .app-presentation main .grid-presentation .presentation-actions{
+    @apply
+    flex
+    items-center
+    md:items-start
+    flex-col
+    gap-y-[7px]
+}
+
+#register-page .app-presentation main .grid-presentation .presentation-actions button{
+    @apply
+    w-[202px]
+    h-[40px]
+    font-semibold
+}
+
+
+#register-page .app-presentation main#step-view{
+    @apply
+    h-full
+    pt-0
+    md:pt-[106px]
+}
+
+
+#register-page .app-presentation main#step-view .grid-aside{
+    @apply
+    grid
+    grid-cols-4
+    gap-x-1
+}
+
+#register-page .app-presentation main#step-view .grid-aside .header-title-page picture{
+    @apply
+    flex
+    items-center
+}
+
+#register-page .app-presentation main#step-view .grid-aside .header-title-page h1{
+    @apply
+    col-span-2
+    flex
+    items-center
+}
+
+#register-page .app-presentation main#step-view .grid-aside .title-page{
+    @apply
+    hidden
+    md:flex
+    flex-wrap
+}
+
+#register-page .app-presentation main#step-view .grid-aside .title-page .aside-title,
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title{
+    @apply
+    col-span-1
+    flex
+    flex-wrap
+    items-end
+    gap-5
+}
+
+#register-page .app-presentation main#step-view .grid-aside .title-page > h1,
+#register-page .app-presentation main#step-view .grid-aside .title-page .aside-title > h1,
+#register-page .app-presentation main#step-view .grid-aside aside > h1,
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title > h1{
+    @apply
+    font-lilita
+    text-title-h1
+    leading-8;
+}
+
+#register-page .app-presentation main#step-view .grid-aside .title-page .aside-title > h1
+#register-page .app-presentation main#step-view .grid-aside aside .aside-title > h1{
+    @apply
+    max-w-[100px]
+    text-wine-primary
+}
+
+#register-page .app-presentation main#step-view .grid-aside .title-page .aside-title p,
+#register-page .app-presentation main#step-view .grid-aside aside p{
+    @apply
+    w-full
+    font-semibold
+    mt-[25px]
+}
+
+#register-page .app-presentation main#step-view .grid-aside .content{
+    @apply
+    col-span-4
+    pl-0
+    md:col-span-3
+    md:pl-[80px]
+}
+
+/* countrys */
+#register-page .app-presentation main#step-view .grid-aside .title-page > picture,
+#register-page .app-presentation main#step-view .grid-aside aside > picture{
+    @apply
+    block
+    mb-[28px]
+}
+
+/* more before */
+.register-page.more-before{
+    @apply
+    grid
+    grid-cols-2
+    sm:grid-cols-4
+    gap-y-[21px]
+    mb-[52px]
+    gap-x-1
+}
+
+/* gender */
+.register-page.gender{
+    @apply
+    grid
+    grid-cols-2
+    gap-y-[21px]
+    gap-x-[20px]
+    font-bold
+}
+
+.register-page.gender .button{
+    @apply
+    flex
+    items-center
+    gap-x-2
+    rounded-xl
+    px-[10px]
+    py-[7px]
+    border
+    cursor-pointer
+    border-gray-light-primary
+    duration-300
+}
+
+.register-page.gender .button.sub-menu{
+    @apply
+    justify-between
+    relative
+}
+
+.register-page.gender .sub-menu-options{
+    @apply
+    absolute
+    top-full
+    w-full
+    left-0
+    py-[9px]
+    flex
+    flex-col
+    items-end
+    gap-y-[9px]
+}
+
+.register-page.gender .sub-menu-options .gender-option{
+    @apply
+    w-full
+    max-w-[261px]
+    rounded-xl
+    border
+    h-[42px]
+    flex
+    items-center
+    justify-start
+    px-[10px]
+    cursor-pointer
+    border-gray-light-primary
+    duration-300
+}
+
+.register-page.gender .button[data-select="true"],
+.register-page.gender .sub-menu-options .gender-option[data-select="true"]{
+    @apply
+    bg-green-100
+    border-green-200
+}

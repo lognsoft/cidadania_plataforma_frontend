@@ -1,0 +1,23 @@
+#default-header{
+    @apply
+    py-[23px]
+}
+#default-header.mobile-response{
+    @apply
+    bg-gray-light-tertiary
+    md:bg-transparent;
+}
+
+#default-header .header-container{
+    @apply
+    flex
+    items-center
+    justify-center
+    md:justify-between
+}
+
+#default-header .header-container img{
+    @apply
+    h-auto
+    w-auto
+}
