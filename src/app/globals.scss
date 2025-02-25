@@ -2,17 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #751730;
-  --secondary: #E02D6C;
-  --tertiary: #4D4D4D;
-  --quaternary: #CCCCCC;
-  --quinary: #707070;
-  --senary: #00B061;
-  --septenary: #D6F0E4;
+html,
+body {
+  @apply h-full
+  font-poppins
+  text-default-tertiary;
 }
 
+.button-variant-shadow {
+  box-shadow: 3px 3px 0px #000;
+}
 
+.center {
+  @apply mx-auto
+  px-5
+  md:px-2
+  w-full
+  max-w-[968px];
+}
+
+:root {
+  --primary: #751730;
+  --secondary: #e02d6c;
+  --tertiary: #4d4d4d;
+  --quaternary: #cccccc;
+  --quinary: #707070;
+  --senary: #00b061;
+  --septenary: #d6f0e4;
+  --pink: #f24e87;
+  --gray: #e6e6e6;
+}
 
 @layer base {
   :root {
@@ -69,8 +88,6 @@
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
