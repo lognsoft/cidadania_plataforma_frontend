@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import "@/components/progress-step/progress-step-component.css";
+import "./progress-step-component.css";
 
 const ProgressStep = ({ progress = 25 }) => {
   const [displayProgress, setDisplayProgress] = useState(0);

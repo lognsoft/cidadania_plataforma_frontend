@@ -38,7 +38,7 @@
     @apply
     font-lilita
     text-title-h1
-    text-wine-primary
+    text-default-primary
     mb-[33px]
     w-full
     max-w-[210px]
@@ -124,7 +124,7 @@
 #register-page .app-presentation main#step-view .grid-aside aside .aside-title > h1{
     @apply
     max-w-[100px]
-    text-wine-primary
+    text-default-primary
 }
 
 #register-page .app-presentation main#step-view .grid-aside .title-page .aside-title p,
@@ -182,7 +182,7 @@
     py-[7px]
     border
     cursor-pointer
-    border-gray-light-primary
+    border-default-quinary
     duration-300
 }
 
@@ -217,7 +217,7 @@
     justify-start
     px-[10px]
     cursor-pointer
-    border-gray-light-primary
+    border-default-quinary
     duration-300
 }
 

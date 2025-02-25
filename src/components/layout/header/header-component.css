@@ -4,7 +4,7 @@
 }
 #default-header.mobile-response{
     @apply
-    bg-gray-light-tertiary
+    bg-default-quaternary
     md:bg-transparent;
 }
 

@@ -28,7 +28,7 @@ const RegisterPage = () => {
             <div className="presentation-actions">
               <ButtonVariantShadow
                 variant={"pink"}
-                onClick={() => router.push("/register/how-meet")}
+                onClick={() => router.push("/register")}
               >
                 Confirmar agora!
               </ButtonVariantShadow>
