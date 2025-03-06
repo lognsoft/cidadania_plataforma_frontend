@@ -1,23 +1,19 @@
-#default-header{
-    @apply
-    py-[23px]
+#default-header {
+  @apply py-[23px];
 }
-#default-header.mobile-response{
-    @apply
-    bg-default-quaternary
+#default-header.mobile-response {
+  @apply bg-default-gray-ligth-primary
     md:bg-transparent;
 }
 
-#default-header .header-container{
-    @apply
-    flex
+#default-header .header-container {
+  @apply flex
     items-center
     justify-center
-    md:justify-between
+    md:justify-between;
 }
 
-#default-header .header-container img{
-    @apply
-    h-auto
-    w-auto
+#default-header .header-container img {
+  @apply h-auto
+    w-auto;
 }

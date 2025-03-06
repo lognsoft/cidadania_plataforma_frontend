@@ -9,17 +9,26 @@ const RegisterPage = () => {
   return (
     <main>
       <div className="center">
-        <div className="grid-presentation">
-          <div className="container-image">
+        <div className="grid-presentation flex items-center justify-between">
+          <div className="relative w-full max-w-[453px] hidden md:block">
             <Image
-              className="w-auto"
-              src="/images/presentation.svg"
+              className="w-auto -mt-[100px]"
+              src="/images/pattern.svg"
               width={453}
               height={373}
-              alt="mascote"
+              alt="Padrão"
+              priority
+            />
+            <Image
+              className="absolute top-0 left-0 z-10 w-auto"
+              src="/images/presentation.svg"
+              width={600}
+              height={473}
+              alt="Apresentação"
               priority
             />
           </div>
+
           <div className="w-full md:max-w-[421px]">
             <h1 className="presentation-title">
               O jeito fácil de confirmar a descendência e conseguir sua
@@ -27,12 +36,12 @@ const RegisterPage = () => {
             </h1>
             <div className="presentation-actions">
               <ButtonVariantShadow
-                variant={"pink"}
+                variant={"default-pink"}
                 onClick={() => router.push("/register")}
               >
                 Confirmar agora!
               </ButtonVariantShadow>
-              <ButtonVariantShadow variant={"gray-light-primary"}>
+              <ButtonVariantShadow variant={"default-gray"}>
                 Acessar minha conta
               </ButtonVariantShadow>
             </div>

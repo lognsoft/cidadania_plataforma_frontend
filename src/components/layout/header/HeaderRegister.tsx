@@ -4,6 +4,7 @@ import Image from "next/image";
 import "./header-component.css";
 import { usePathname } from "next/navigation";
 import { SelectLanguage } from "@/components/features/language-selection";
+import { MobileHeader } from "../mobile-header";
 
 const HeaderRegister = () => {
   const path = usePathname();
@@ -17,14 +18,19 @@ const HeaderRegister = () => {
         <nav className="header-container">
           <Link href="/">
             {path !== "/" && (
-              <Image
-                className="w-auto h-auto md:hidden"
-                src="/images/logo-responsive.svg"
-                width="48"
-                height="62"
-                alt="logomarca"
-                priority
-              />
+              <>
+                <div className="flex flex-col items-center">
+                  <Image
+                    className="w-auto h-auto md:hidden"
+                    src="/images/logo-responsive.svg"
+                    width="48"
+                    height="62"
+                    alt="logomarca"
+                    priority
+                  />
+                  <MobileHeader />
+                </div>
+              </>
             )}
             <Image
               className={`w-auto h-auto${

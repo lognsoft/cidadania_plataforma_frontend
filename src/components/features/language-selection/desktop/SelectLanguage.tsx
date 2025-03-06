@@ -9,10 +9,10 @@ import {
 
 const SelectLanguage = () => {
   return (
-    <div className="flex items-center gap-x-3 font-semibold text-gray-primary">
+    <div className="flex items-center gap-x-3 font-semibold text-text-default-quinary">
       <div>Linguagem:</div>
       <Select value={"portuguese"} onValueChange={() => {}}>
-        <SelectTrigger className="min-w-[130px] border-0 shadow-none outline-none focus:ring-0 text-base font-semibold p-0 text-gray-primary">
+        <SelectTrigger className="min-w-[130px] border-0 shadow-none outline-none focus:ring-0 text-base font-semibold p-0 text-text-default-quinary">
           <SelectValue placeholder="Idioma" />
         </SelectTrigger>
         <SelectContent className="bg-white">
