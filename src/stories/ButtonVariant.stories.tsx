@@ -14,7 +14,7 @@ type Story = StoryObj<typeof ButtonVariant>;
 export const Default: Story = {
   args: {
     children: "Default Button",
-    variant: "default",
+    variant: "default-primary",
     shadow: true,
   },
 };
@@ -22,7 +22,7 @@ export const Default: Story = {
 export const Outline: Story = {
   args: {
     children: "Outline Button",
-    variant: "outline",
+    variant: "default-quaternary",
     shadow: true,
   },
 };
@@ -30,7 +30,7 @@ export const Outline: Story = {
 export const NoShadow: Story = {
   args: {
     children: "Button without shadow",
-    variant: "default",
+    variant: "default-pink",
     shadow: false,
   },
 };
@@ -38,7 +38,7 @@ export const NoShadow: Story = {
 export const Destructive: Story = {
   args: {
     children: "Destructive Button",
-    variant: "destructive",
+    variant: "default-eighth",
     shadow: true,
   },
 };
@@ -46,7 +46,7 @@ export const Destructive: Story = {
 export const Ghost: Story = {
   args: {
     children: "Ghost Button",
-    variant: "ghost",
+    variant: "default-gray",
     shadow: true,
   },
 };

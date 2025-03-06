@@ -6,7 +6,7 @@ function MobileHeader() {
       id="model-step-header-1"
       className="md:hidden bg-gray-light-tertiary pb-[23px] mb-4"
     >
-      <div className="center">
+      <div className="flex flex-col items-center">
         <div className="header-title flex items-end justify-center gap-x-6">
           <picture>
             <Image

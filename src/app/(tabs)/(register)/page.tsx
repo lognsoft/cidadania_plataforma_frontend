@@ -9,30 +9,30 @@ const RegisterPage = () => {
   return (
     <main>
       <div className="center">
-        <div className="grid-presentation">
-          <div className="container-image">
+        <div className="grid-presentation flex items-center justify-between">
+          <div className="hidden md:block md:ml-0 lg:-ml-12 w-full max-w-[600px]">
             <Image
-              className="w-auto"
-              src="/images/presentation.svg"
-              width={453}
-              height={373}
-              alt="mascote"
+              src="/images/logo-home.svg"
+              width={600}
+              height={473}
+              alt="logo-home"
               priority
+              className="w-full h-auto object-contain"
             />
           </div>
-          <div className="w-full md:max-w-[421px]">
+          <div className="w-full md:max-w-[421px] ml-8">
             <h1 className="presentation-title">
               O jeito fácil de confirmar a descendência e conseguir sua
               cidadania!
             </h1>
             <div className="presentation-actions">
               <ButtonVariantShadow
-                variant={"pink"}
+                variant={"default-pink"}
                 onClick={() => router.push("/register")}
               >
                 Confirmar agora!
               </ButtonVariantShadow>
-              <ButtonVariantShadow variant={"gray-light-primary"}>
+              <ButtonVariantShadow variant={"default-gray"}>
                 Acessar minha conta
               </ButtonVariantShadow>
             </div>

@@ -27,6 +27,9 @@ export default {
         "default-septenary": "var(--septenary)",
         "default-eighth": "var(--eighth)",
         "default-pink": "var(--pink)",
+        "default-gray": "var(--gray)",
+        "default-gray-ligth": "var(--gray-ligth)",
+        "default-gray-ligth-primary": "var(--gray-ligth-primary)",
 
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

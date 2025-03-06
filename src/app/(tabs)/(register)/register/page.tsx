@@ -7,7 +7,6 @@ import { rootesay_add } from "@/constants/CRootesayAdd";
 function RegisterPage() {
   return (
     <>
-      <MobileHeader />
       <div className="center">
         <p className="text-center mb-7 md:hidden">
           Conta rapidinho, como você encontrou o Rooteasy?
