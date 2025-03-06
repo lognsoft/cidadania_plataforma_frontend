@@ -10,26 +10,17 @@ const RegisterPage = () => {
     <main>
       <div className="center">
         <div className="grid-presentation flex items-center justify-between">
-          <div className="relative w-full max-w-[453px] hidden md:block">
+          <div className="hidden md:block md:ml-0 lg:-ml-12 w-full max-w-[600px]">
             <Image
-              className="w-auto -mt-[100px]"
-              src="/images/pattern.svg"
-              width={453}
-              height={373}
-              alt="Padrão"
-              priority
-            />
-            <Image
-              className="absolute top-0 left-0 z-10 w-auto"
-              src="/images/presentation.svg"
+              src="/images/logo-home.svg"
               width={600}
               height={473}
-              alt="Apresentação"
+              alt="logo-home"
               priority
+              className="w-full h-auto object-contain"
             />
           </div>
-
-          <div className="w-full md:max-w-[421px]">
+          <div className="w-full md:max-w-[421px] ml-8">
             <h1 className="presentation-title">
               O jeito fácil de confirmar a descendência e conseguir sua
               cidadania!

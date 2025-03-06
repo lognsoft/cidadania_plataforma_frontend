@@ -43,7 +43,7 @@ const HeaderRegister = () => {
               priority
             />
           </Link>
-          <div className="hidden md:block relative -z-20">
+          <div className="hidden md:block">
             <SelectLanguage />
           </div>
         </nav>
