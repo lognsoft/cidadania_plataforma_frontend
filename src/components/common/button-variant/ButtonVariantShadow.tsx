@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ButtonHTMLAttributes } from "react";
+import "./button-variant-shadow.css";
 
 type CustomVariant =
   | "default-primary"

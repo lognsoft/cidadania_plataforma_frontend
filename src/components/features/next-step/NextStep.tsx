@@ -14,9 +14,9 @@ const NextStepComponent = ({ text, href }: INextStepComponentProps) => {
   return (
     <div className="next-step">
       <Button
-        variant={disabled ? "disabled" : "wine"}
+        variant={disabled ? "default-gray" : "default-primary"}
         className="w-full max-w-[200px]"
-        disabled={disabled}
+        disabled={false}
       >
         {text}
       </Button>

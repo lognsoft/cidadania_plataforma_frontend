@@ -7,11 +7,23 @@ import "./root-easy-component.css";
 interface CardRooteasyProps extends HTMLAttributes<HTMLDivElement> {
   data: IRootEasy;
   className?: string;
+  selected?: boolean;
+  onSelect?: () => void;
 }
 
-const CardRooteasy = ({ data, className = "" }: CardRooteasyProps) => {
+const CardRooteasy = ({
+  data,
+  className = "",
+  selected = false,
+  onSelect,
+}: CardRooteasyProps) => {
   return (
-    <div className={`card-rooteasy ${className}`}>
+    <div
+      data-select={selected}
+      className={`card-rooteasy ${className}`}
+      onClick={onSelect}
+      tabIndex={0}
+    >
       <picture>
         <Image
           src={data.icon}
