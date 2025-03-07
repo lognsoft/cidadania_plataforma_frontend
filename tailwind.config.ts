@@ -30,6 +30,10 @@ export default {
         "default-gray": "var(--gray)",
         "default-gray-ligth": "var(--gray-ligth)",
         "default-gray-ligth-primary": "var(--gray-ligth-primary)",
+        "default-green-primary": "var(--green-primary)",
+        "default-green-primary-100": "var(--green-primary-100)",
+        "default-green-primary-200": "var(--green-primary-200)",
+        "green-primary": "#019853",
 
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
