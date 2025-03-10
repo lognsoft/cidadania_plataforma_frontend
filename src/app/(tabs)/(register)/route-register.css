@@ -157,9 +157,12 @@
     grid
     grid-cols-2
     sm:grid-cols-4
-    gap-y-[21px]
     mb-[52px]
-    gap-x-1
+    gap-[25px];
+}
+
+.register-page.more-before::-webkit-scrollbar{
+    display: none;
 }
 
 /* gender */

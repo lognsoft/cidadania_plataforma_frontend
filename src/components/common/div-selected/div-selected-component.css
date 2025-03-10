@@ -13,7 +13,6 @@
     cursor-pointer
     min-h-[108px]
     w-full
-    max-w-[138px]
     mx-auto
     duration-300
     hover:bg-default-gray-ligth-primary;

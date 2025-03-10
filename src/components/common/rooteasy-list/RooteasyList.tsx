@@ -11,15 +11,14 @@ function RooteasyList({ data }: RooteasyListProps) {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
   return (
-    <div className="register-page more-before overflow-y-scroll p-0">
+    <div className="register-page more-before overflow-y-auto p-0 max-h-[380px]">
       {data.map((item) => (
-        <div key={item.icon}>
-          <CardRooteasy
-            data={item}
-            selected={selectedCard === item.icon}
-            onSelect={() => setSelectedCard(item.icon)}
-          />
-        </div>
+        <CardRooteasy
+          key={item.text}
+          data={item}
+          selected={selectedCard === item.icon}
+          onSelect={() => setSelectedCard(item.icon)}
+        />
       ))}
     </div>
   );

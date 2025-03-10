@@ -1,9 +1,6 @@
 #default-header {
   @apply
   py-[23px]
-  fixed
-  left-0
-  top-0
   w-full;
 }
 #default-header.mobile-response {
