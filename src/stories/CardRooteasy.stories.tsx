@@ -27,10 +27,71 @@ export const Default: Story = {
   },
 };
 
-export const Selected: Story = {
+export const DefaultShadow: Story = {
+  args: {
+    data: dummyData,
+    selected: false,
+    shadow: true,
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedGreen: Story = {
   args: {
     data: dummyData,
     selected: true,
+    variant: "green",
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedGreenShadow: Story = {
+  args: {
+    data: dummyData,
+    selected: true,
+    variant: "green",
+    shadow: true,
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedGreenShadowColor: Story = {
+  args: {
+    data: dummyData,
+    selected: true,
+    variant: "green",
+    shadow: true,
+    colorShadow: true,
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedRed: Story = {
+  args: {
+    data: dummyData,
+    selected: true,
+    variant: "red",
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedRedShadow: Story = {
+  args: {
+    data: dummyData,
+    selected: true,
+    variant: "red",
+    shadow: true,
+    onSelect: () => console.log("Card clicked!"),
+  },
+};
+
+export const SelectedRedShadowColor: Story = {
+  args: {
+    data: dummyData,
+    selected: true,
+    variant: "red",
+    shadow: true,
+    colorShadow: true,
     onSelect: () => console.log("Card clicked!"),
   },
 };

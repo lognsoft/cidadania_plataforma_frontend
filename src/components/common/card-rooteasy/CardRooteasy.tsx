@@ -3,11 +3,15 @@ import { HTMLAttributes } from "react";
 import type IRootEasy from "@/types/IRootEasyAdd";
 import Image from "next/image";
 import "./root-easy-component.css";
+import DivSelected from "../div-selected/DivSelected";
 
 interface CardRooteasyProps extends HTMLAttributes<HTMLDivElement> {
   data: IRootEasy;
+  variant?:"green" | "red"
   className?: string;
   selected?: boolean;
+  shadow:boolean
+  colorShadow:boolean
   onSelect?: () => void;
 }
 
@@ -15,12 +19,18 @@ const CardRooteasy = ({
   data,
   className = "",
   selected = false,
+  variant = "green",
+  shadow = false,
+  colorShadow = false,
   onSelect,
 }: CardRooteasyProps) => {
   return (
-    <div
-      data-select={selected}
-      className={`card-rooteasy ${className}`}
+    <DivSelected
+      colorShadow={colorShadow}
+      shadow={shadow}
+      selected={selected}
+      className={className}
+      variant={variant}
       onClick={onSelect}
       tabIndex={0}
     >
@@ -34,7 +44,7 @@ const CardRooteasy = ({
         />
       </picture>
       <h3 className="font-semibold">{data.text}</h3>
-    </div>
+    </DivSelected>
   );
 };
 
