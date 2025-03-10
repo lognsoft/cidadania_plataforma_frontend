@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./progress-step-component.css";
 
-const ProgressStep = ({ progress = 25 }) => {
+const ProgressStep = ({ progress = 25 }:{progress:number}) => {
   const [displayProgress, setDisplayProgress] = useState(0);
 
   useEffect(() => {

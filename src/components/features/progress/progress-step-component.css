@@ -23,7 +23,7 @@
 }
 
 .progress .progress-bar {
-  @apply bg-default-primary
+  @apply bg-default-secondary
     h-full
     rounded-full
     relative
@@ -37,7 +37,7 @@
     h-[27px]
     top-[50%]
     -translate-y-[50%]
-    bg-default-primary
+    bg-default-octonary
     text-white
     right-0
     translate-x-[50%]

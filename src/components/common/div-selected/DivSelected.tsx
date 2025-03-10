@@ -5,7 +5,7 @@ interface DivSelectedProps extends Omit<HTMLAttributes<HTMLDivElement>, 'classNa
     children: ReactNode;
     selected?: boolean;
     shadow?:boolean;
-    colorShadow:boolean
+    colorShadow?:boolean
     variant?: "red" | "green";
     className?: string;
 }

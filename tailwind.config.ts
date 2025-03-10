@@ -25,6 +25,7 @@ export default {
         "default-quinary": "var(--quinary)",
         "default-senary": "var(--senary)",
         "default-septenary": "var(--septenary)",
+        "default-octonary": "var(--octonary)",
         "default-eighth": "var(--eighth)",
         "default-pink": "var(--pink)",
         "default-gray": "var(--gray)",
