@@ -1,6 +1,5 @@
 .card-rooteasy {
-    @apply
-    rounded-xl
+  @apply rounded-xl
     pt-4
     px-3
     flex
@@ -18,27 +17,24 @@
     hover:bg-default-gray-ligth-primary;
 }
 
-.card-rooteasy.card-rooteasy-shadow{
-    box-shadow: 3px 3px 0px #000;
+.card-rooteasy.card-rooteasy-shadow {
+  box-shadow: 3px 3px 0px #000;
 }
 
-.card-rooteasy.card-rooteasy-shadow[data-color="true"][data-variant="green"][data-select="true"]{
-    box-shadow: 3px 3px 0px #afdbc7;
+.card-rooteasy.card-rooteasy-shadow[data-color="true"][data-variant="green"][data-select="true"] {
+  box-shadow: 3px 3px 0px #afdbc7;
 }
 
-.card-rooteasy.card-rooteasy-shadow[data-color="true"][data-variant="red"][data-select="true"]{
-    box-shadow: 3px 3px 0px #ffbace;
+.card-rooteasy.card-rooteasy-shadow[data-color="true"][data-variant="red"][data-select="true"] {
+  box-shadow: 3px 3px 0px #ffbace;
 }
-
 
 .card-rooteasy[data-variant="green"][data-select="true"] {
-    @apply
-    bg-green-100
+  @apply bg-green-100
     border-green-200;
 }
 
 .card-rooteasy[data-variant="red"][data-select="true"] {
-    @apply
-    bg-red-100
+  @apply bg-red-100
     border-red-200;
 }

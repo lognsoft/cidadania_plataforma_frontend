@@ -1,0 +1,11 @@
+.card-country picture .image-country {
+  @apply w-auto h-auto left-[50%] -translate-x-[50%] -translate-y-[30px] relative inline-block z-10;
+}
+
+.card-country h3 {
+  @apply font-poppins text-[18px] font-bold text-center;
+}
+
+.card-country h3 {
+  @apply font-poppins text-[18px] font-bold text-center -mt-[10px];
+}

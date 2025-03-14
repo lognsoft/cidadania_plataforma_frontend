@@ -7,11 +7,11 @@ import DivSelected from "../div-selected/DivSelected";
 
 interface CardRooteasyProps extends HTMLAttributes<HTMLDivElement> {
   data: IRootEasy;
-  variant?:"green" | "red"
+  variant?: "green" | "red";
   className?: string;
   selected?: boolean;
-  shadow?:boolean
-  colorShadow?:boolean
+  shadow?: boolean;
+  colorShadow?: boolean;
   onSelect?: () => void;
 }
 
