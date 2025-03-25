@@ -1,0 +1,14 @@
+.icon-button-wrapper {
+  display: inline-flex;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 14px;
+}
