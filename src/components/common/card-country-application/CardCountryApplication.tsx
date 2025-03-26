@@ -27,7 +27,9 @@ const CardCountryApplication: React.FC<CardCountryApplicationProps> = ({
       onClick={onClick}
       className={`relative w-[135px] h-[100px] rounded-xl cursor-pointer overflow-hidden ${className}`}
     >
-      <PercentageBar percentage={percentage} />
+      <div className="absolute top-2 right-2">
+        <PercentageBar percentage={percentage} />
+      </div>
       <div className="absolute left-3 top-[25px] bottom-[12px] flex flex-col justify-between text-left">
         <div className="flex flex-col gap-[3px]">
           {icon && (
