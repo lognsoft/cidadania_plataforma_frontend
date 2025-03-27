@@ -1,15 +1,18 @@
-"use client";
 import { useState } from "react";
 import CardRooteasy from "@/components/common/card-rooteasy/CardRooteasy";
 import IRootEasy from "@/types/IRootEasyAdd";
 
 interface RooteasyListProps {
   data: IRootEasy[];
+  selectedCard: string | null;
+  setSelectedCard: (value: string | null) => void;
 }
 
-function RooteasyList({ data }: RooteasyListProps) {
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
-
+function RooteasyList({
+  data,
+  selectedCard,
+  setSelectedCard,
+}: RooteasyListProps) {
   return (
     <div className="register-page more-before overflow-y-auto p-0 max-h-[380px]">
       {data.map((item) => (

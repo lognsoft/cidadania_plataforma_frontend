@@ -1,0 +1,14 @@
+#register-page .app-presentation main#step-view .grid-aside .header-title-page {
+  @apply md:hidden
+    col-span-4
+    grid
+    grid-cols-3
+    gap-5
+    font-lilita
+    text-twenty-two
+    px-5
+    pt-9
+    w-full
+    max-w-[500px]
+    mx-auto;
+}

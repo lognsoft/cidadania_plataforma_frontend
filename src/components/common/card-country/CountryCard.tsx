@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import ICountryCard from "@/types/ICounrtyCard";
 import DivSelected from "../div-selected/DivSelected";

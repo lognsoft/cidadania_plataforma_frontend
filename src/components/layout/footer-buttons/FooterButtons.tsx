@@ -1,7 +1,16 @@
 import Image from "next/image";
 import NextStepComponent from "@/components/features/next-step/NextStep";
 
-function FooterButtons() {
+interface FooterButtonsProps {
+  isEnabled: boolean;
+}
+
+function FooterButtons({ isEnabled }: FooterButtonsProps) {
+  // Defina classes de estilo para os estados habilitado e desabilitado
+  const buttonStyle = isEnabled
+    ? "enabled-button-style"
+    : "disabled-button-style";
+
   return (
     <>
       <div className="w-full pb-5 md:hidden">
@@ -15,10 +24,20 @@ function FooterButtons() {
         <p className="text-center w-full max-w-[212px] mx-auto block md:hidden mb-6 text-gray-light-primary">
           Role para baixo para ver todas as opções
         </p>
-        <NextStepComponent text="Continuar" href="/register/country" />
+        <NextStepComponent
+          text="Continuar"
+          href="/register/country"
+          className={buttonStyle}
+          disabled={!isEnabled}
+        />
       </div>
       <div className="hidden md:block">
-        <NextStepComponent text="Continuar" href="/register/country" />
+        <NextStepComponent
+          text="Continuar"
+          href="/register/country"
+          className={buttonStyle}
+          disabled={!isEnabled}
+        />
       </div>
     </>
   );
