@@ -72,6 +72,7 @@
 <body>
   <canvas id="myCanvas" width="1200" height="800"></canvas>
 
+  <!-- MODAL: Adicionar Novo Membro -->
   <div id="modal-add" class="modal">
     <div class="modal-content">
       <span id="modal-add-close" class="modal-close">&times;</span>
@@ -239,98 +240,126 @@
     // ===========================
     // showAddModal
     // ===========================
+
     function showAddModal(parent, direction) {
-      pendingParent    = parent;
-      pendingDirection = direction;
-      inputName.value    = "";
-      inputBirth.value   = "";
-      inputGender.value  = "Masculino";
-      inputCountry.value = "Brasil";
-      inputKinship.innerHTML = "";
+  pendingParent = parent;
+  pendingDirection = direction;
+  inputName.value = "";
+  inputBirth.value = "";
+  inputGender.value = "Masculino";
+  inputCountry.value = "Brasil";
+  inputKinship.innerHTML = "";
 
-      // ----- Caso "Tio" + top -----
-      // O Tio, ao clicar no + do topo, não pode criar/conectar a um novo Vô.
-      // Ele só pode se conectar a um Vô existente e criar/conectar a um Tio-Avô.
-      if (parent.DegreeKinship === "Tio" && direction === "top") {
-        let ops = [];
-        const existingVos = members.filter(
-          m => m.DegreeKinship === "Vô" && !m.IsLinkOnly
-        );
-        existingVos.forEach(vo => {
-          const alreadyConn = parent.Connections.some(c => c.targetId === vo.Id);
-          if (!alreadyConn) {
-            ops.push({
-              value: "connect-vo-" + vo.Id,
-              label: `Conectar com Vô - ${vo.Name}`
-            });
-          }
-        });
-        const existingTioAvos = members.filter(
-          m => m.DegreeKinship === "Tio-Avô" && !m.IsLinkOnly
-        );
-        existingTioAvos.forEach(ta => {
-          const alreadyConn = parent.Connections.some(c => c.targetId === ta.Id);
-          if (!alreadyConn) {
-            ops.push({
-              value: "connect-tioavo-" + ta.Id,
-              label: `Conectar com Tio-Avô - ${ta.Name}`
-            });
-          }
-        });
+  // ----- Caso "Tio" + top -----
+  if (parent.DegreeKinship === "Tio" && direction === "top") {
+    let ops = [];
+    const existingVos = members.filter(
+      m => m.DegreeKinship === "Vô" && !m.IsLinkOnly
+    );
+    existingVos.forEach(vo => {
+      const alreadyConn = parent.Connections.some(c => c.targetId === vo.Id);
+      if (!alreadyConn) {
         ops.push({
-          value: "create-tioavo",
-          label: "Criar Novo Tio-Avô"
+          value: "connect-vo-" + vo.Id,
+          label: `Conectar com Vô - ${vo.Name}`
         });
-        ops.forEach(({ value, label }) => {
-          const opt = document.createElement("option");
-          opt.value = value;
-          opt.textContent = label;
-          inputKinship.appendChild(opt);
-        });
-        inputKinship.disabled = false;
-        modalAdd.style.display = "block";
-        return;
       }
-
-      // ----- Caso "Tio-Avô" + top -----
-      if (parent.DegreeKinship === "Tio-Avô" && direction === "top") {
-        let ops = [];
-        const existingBisavos = members.filter(
-          m => m.DegreeKinship === "Bisavô" && !m.IsLinkOnly
-        );
-        existingBisavos.forEach(bv => {
-          const alreadyConn = parent.Connections.some(c => c.targetId === bv.Id);
-          if (!alreadyConn) {
-            ops.push({
-              value: "connect-bisavo-" + bv.Id,
-              label: `Conectar com Bisavô - ${bv.Name}`
-            });
-          }
-        });
+    });
+    const existingTioAvos = members.filter(
+      m => m.DegreeKinship === "Tio-Avô" && !m.IsLinkOnly
+    );
+    existingTioAvos.forEach(ta => {
+      const alreadyConn = parent.Connections.some(c => c.targetId === ta.Id);
+      if (!alreadyConn) {
         ops.push({
-          value: "create-bisavo",
-          label: "Criar Novo Bisavô"
+          value: "connect-tioavo-" + ta.Id,
+          label: `Conectar com Tio-Avô - ${ta.Name}`
         });
-        ops.forEach(({ value, label }) => {
-          const opt = document.createElement("option");
-          opt.value = value;
-          opt.textContent = label;
-          inputKinship.appendChild(opt);
-        });
-        inputKinship.disabled = false;
-        modalAdd.style.display = "block";
-        return;
       }
-
-      // ----- Caso normal (ex. Eu, Irmão, Primo, etc.) -----
-      const autoKin = getAutomaticKinship(parent, direction);
+    });
+    ops.push({
+      value: "create-tioavo",
+      label: "Criar Novo Tio-Avô"
+    });
+    ops.forEach(({ value, label }) => {
       const opt = document.createElement("option");
-      opt.value = autoKin;
-      opt.textContent = autoKin;
+      opt.value = value;
+      opt.textContent = label;
       inputKinship.appendChild(opt);
-      inputKinship.disabled = true;
-      modalAdd.style.display = "block";
-    }
+    });
+    inputKinship.disabled = false;
+    modalAdd.style.display = "block";
+    return;
+  }
+
+  // ----- Caso "Tio-Avô" + top -----
+  if (parent.DegreeKinship === "Tio-Avô" && direction === "top") {
+    let ops = [];
+    const existingBisavos = members.filter(
+      m => m.DegreeKinship === "Bisavô" && !m.IsLinkOnly
+    );
+    existingBisavos.forEach(bv => {
+      const alreadyConn = parent.Connections.some(c => c.targetId === bv.Id);
+      if (!alreadyConn) {
+        ops.push({
+          value: "connect-bisavo-" + bv.Id,
+          label: `Conectar com Bisavô - ${bv.Name}`
+        });
+      }
+    });
+    ops.forEach(({ value, label }) => {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      inputKinship.appendChild(opt);
+    });
+    inputKinship.disabled = false;
+    modalAdd.style.display = "block";
+    return;
+  }
+
+  // ----- Caso "Primo" + top -----
+  if (parent.DegreeKinship === "Primo" && direction === "top") {
+    let ops = [];
+    // Buscamos todos os membros com grau de parentesco "Tio"
+    const existingTios = members.filter(
+      m => m.DegreeKinship === "Tio" && !m.IsLinkOnly
+    );
+    existingTios.forEach(tio => {
+      // Verifica se o Primo já está conectado a esse Tio
+      const alreadyConn = parent.Connections.some(c => c.targetId === tio.Id);
+      if (!alreadyConn) {
+        ops.push({
+          value: "connect-tio-" + tio.Id,
+          label: `Conectar com Tio - ${tio.Name}`
+        });
+      }
+    });
+    // Opção de criar um novo Tio
+    ops.push({
+      value: "create-tio",
+      label: "Criar Novo Tio"
+    });
+    ops.forEach(({ value, label }) => {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      inputKinship.appendChild(opt);
+    });
+    inputKinship.disabled = false;
+    modalAdd.style.display = "block";
+    return;
+  }
+
+  // ----- Caso normal (ex. Eu, Irmão, Filho, etc.) -----
+  const autoKin = getAutomaticKinship(parent, direction);
+  const opt = document.createElement("option");
+  opt.value = autoKin;
+  opt.textContent = autoKin;
+  inputKinship.appendChild(opt);
+  inputKinship.disabled = true;
+  modalAdd.style.display = "block";
+}
 
     function closeAddModal() {
       modalAdd.style.display = "none";
@@ -345,7 +374,8 @@
       }
       const selectedVal = inputKinship.value;
 
-      // Conexões especiais:
+      // -------------- Conexões especiais --------------
+      // (Tio + top) -> conectar a Vô existente
       if (selectedVal.startsWith("connect-vo-")) {
         const voId = selectedVal.replace("connect-vo-", "");
         const existingVo = members.find(m => m.Id === voId);
@@ -362,6 +392,8 @@
         saveState();
         return;
       }
+
+      // (Tio + top) -> conectar a Tio-Avô existente
       if (selectedVal.startsWith("connect-tioavo-")) {
         const taId = selectedVal.replace("connect-tioavo-", "");
         const existingTa = members.find(m => m.Id === taId);
@@ -378,10 +410,14 @@
         saveState();
         return;
       }
+
+      // (Tio + top) -> criar novo Tio-Avô
       if (selectedVal === "create-tioavo") {
         createAndConnect("Tio-Avô");
         return;
       }
+
+      // (Tio-Avô + top) -> conectar a Bisavô existente
       if (selectedVal.startsWith("connect-bisavo-")) {
         const bvId = selectedVal.replace("connect-bisavo-", "");
         const existingBv = members.find(m => m.Id === bvId);
@@ -398,11 +434,32 @@
         saveState();
         return;
       }
-      if (selectedVal === "create-bisavo") {
-        createAndConnect("Bisavô");
+
+      // (Primo + bottom) -> conectar a Tio existente
+      if (selectedVal.startsWith("connect-tio-")) {
+        const tioId = selectedVal.replace("connect-tio-", "");
+        const existingTio = members.find(m => m.Id === tioId);
+        if (existingTio) {
+          pendingParent.Connections.push({
+            targetId: existingTio.Id,
+            direction: pendingDirection,
+            linkType: "Tio",
+            isLinkOnly: false
+          });
+        }
+        closeAddModal();
+        drawAll();
+        saveState();
         return;
       }
-      // Caso normal (ex: Filho, Irmão, Primo, etc.)
+
+      // (Primo + bottom) -> criar novo Tio
+      if (selectedVal === "create-tio") {
+        createAndConnect("Tio");
+        return;
+      }
+
+      // -------------- Caso normal (ex: Filho, Irmão, etc.) --------------
       createAndConnect(selectedVal);
 
       function createAndConnect(kin) {
@@ -459,6 +516,7 @@
       let bottom = top + canvasEl.height / view.scale;
       let startX = Math.floor(left / gridSize) * gridSize;
       let startY = Math.floor(top / gridSize) * gridSize;
+
       for (let x = startX; x <= right; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, top);
@@ -505,6 +563,7 @@
             endX = posT.x;
             endY = posT.y + posT.size / 2;
           } else {
+            // fallback
             startX = posM.x + posM.size / 2;
             startY = posM.y + posM.size / 2;
             endX = posT.x + posT.size / 2;
@@ -518,7 +577,7 @@
       });
     }
 
-    // Offset para posicionar o "+" mais afastado
+    // Offset para posicionar o "+" mais afastado do quadrado
     const offsetDistance = 20;
 
     function drawPlus(cx, cy) {
@@ -546,7 +605,7 @@
         ctx.fillRect(pos.x, pos.y, pos.size, pos.size);
         const half = pos.size / 2;
         
-        // Se m não for "Eu" e compartilhar um ancestral com outro, não desenha nenhum "+"
+        // Se m não for "Eu" e compartilhar um ancestral com outro, não desenha "+"
         if (m.DegreeKinship !== "Eu" && sharesParentWithAnother(m)) {
           drawMemberText(m);
           return;
@@ -556,16 +615,21 @@
         if (!hasFatherOrMother(m) && m.DegreeKinship !== "Irmão") {
           drawPlus(pos.x + half, pos.y - offsetDistance);
         }
+
         // Desenha "+" embaixo e laterais para "Eu", "Irmão" e "Primo"
         if (["Eu", "Irmão", "Primo"].includes(m.DegreeKinship)) {
-  drawPlus(pos.x + half, pos.y + pos.size + offsetDistance);  // "+" embaixo
-  if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
-    drawPlus(pos.x - offsetDistance, pos.y + half);  // "+" à esquerda para "Eu" e "Primo"
-  }
-  if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
-    drawPlus(pos.x + pos.size + offsetDistance, pos.y + half); // "+" à direita para "Eu" e "Primo"
-  }
-}
+          // embaixo
+          drawPlus(pos.x + half, pos.y + pos.size + offsetDistance);
+
+          // Para "Eu" e "Irmão", desenha "+" à esquerda
+          if (m.DegreeKinship !== "Primo") {
+            drawPlus(pos.x - offsetDistance, pos.y + half);
+          }
+          // Para "Eu", desenha "+" à direita
+          if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
+            drawPlus(pos.x + pos.size + offsetDistance, pos.y + half);
+          }
+        }
 
         drawMemberText(m);
       });
@@ -597,6 +661,7 @@
       e.preventDefault();
       const mx = e.offsetX, my = e.offsetY;
       const before = getWorldCoords(mx, my);
+      // Zoom in/out
       if (e.deltaY < 0) view.scale *= 1.1;
       else view.scale /= 1.1;
       view.offsetX = mx - before.x * view.scale;
@@ -638,23 +703,30 @@
         if (m.IsLinkOnly) continue;
         const pos = m.ScreenPosition;
         const half = pos.size / 2;
+
+        // "+" no topo
         if (!hasFatherOrMother(m) && m.DegreeKinship !== "Irmão") {
           if (isClickedPlus(mx, my, pos.x + half, pos.y - offsetDistance)) {
             showAddModal(m, "top");
             return;
           }
         }
+
+        // "+" embaixo e laterais para Eu, Irmão, Primo
         if (["Eu", "Irmão", "Primo"].includes(m.DegreeKinship)) {
+          // embaixo
           if (isClickedPlus(mx, my, pos.x + half, pos.y + pos.size + offsetDistance)) {
             showAddModal(m, "bottom");
             return;
           }
+          // esquerda
           if (m.DegreeKinship !== "Primo") {
             if (isClickedPlus(mx, my, pos.x - offsetDistance, pos.y + half)) {
               showAddModal(m, "left");
               return;
             }
           }
+          // direita
           if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
             if (isClickedPlus(mx, my, pos.x + pos.size + offsetDistance, pos.y + half)) {
               showAddModal(m, "right");
@@ -686,6 +758,7 @@
     function handleMove(e) {
       e.preventDefault();
       const pointer = getPointerCoords(e);
+
       if (draggingMember) {
         const worldPos = getWorldCoords(pointer.x, pointer.y);
         draggingMember.ScreenPosition.x = worldPos.x - dragOffset.x;
@@ -716,38 +789,12 @@
       const dx = mx - cx;
       const dy = my - cy;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      return dist <= 10;
+      return dist <= 10; 
     }
 
     // Inicializa
     loadState();
     drawAll();
-
-    // ======================================================
-    // Se dois membros compartilharem o mesmo ancestral (baseado em fatherLine),
-    // não exibimos os sinais de "+" para esses membros (exceto para "Eu")
-    function sharesParentWithAnother(m) {
-      if (m.DegreeKinship === "Eu") return false;
-      const myAncestralConns = m.Connections.filter(conn =>
-        fatherLine.includes(conn.linkType)
-      );
-      if (myAncestralConns.length === 0) return false;
-      for (let ancConn of myAncestralConns) {
-        const ancId = ancConn.targetId;
-        let count = 0;
-        for (let other of members) {
-          if (other.IsLinkOnly) continue;
-          const c2 = other.Connections.filter(conn =>
-            fatherLine.includes(conn.linkType) && conn.targetId === ancId
-          );
-          if (c2.length > 0) {
-            count++;
-          }
-        }
-        if (count >= 2) return true;
-      }
-      return false;
-    }
   </script>
 </body>
 </html>
