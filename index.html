@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Family Tree – linkType Dinâmico</title>
+  <title>Family Tree – linkType dinamico</title>
   <style>
     body { margin: 0; }
     canvas {
@@ -70,731 +70,711 @@
   </style>
 </head>
 <body>
-  <canvas id="myCanvas" width="1200" height="800"></canvas>
+  <canvas id="meuCanvas" width="1200" height="800"></canvas>
 
-  <!-- MODAL: Adicionar Novo Membro -->
-  <div id="modal-add" class="modal">
+  <!-- modal: adicionar novo membro -->
+  <div id="modal-adicionar" class="modal">
     <div class="modal-content">
-      <span id="modal-add-close" class="modal-close">&times;</span>
+      <span id="modal-adicionar-fechar" class="modal-close">&times;</span>
       <h2>Adicionar Novo Membro</h2>
       <div class="form-group">
-        <label for="inputName">Nome Completo</label>
-        <input type="text" id="inputName" placeholder="Nome e sobrenome" />
+        <label for="entradaNome">Nome Completo</label>
+        <input type="text" id="entradaNome" placeholder="Nome e sobrenome" />
       </div>
       <div class="form-group">
-        <label for="inputBirth">Nascimento</label>
-        <input type="text" id="inputBirth" placeholder="dd/mm/aaaa" />
+        <label for="entradaNascimento">Nascimento</label>
+        <input type="text" id="entradaNascimento" placeholder="dd/mm/aaaa" />
       </div>
       <div class="form-group">
-        <label for="inputGender">Gênero</label>
-        <select id="inputGender">
+        <label for="entradaGenero">Genero</label>
+        <select id="entradaGenero">
           <option value="Masculino">Masculino</option>
           <option value="Feminino">Feminino</option>
           <option value="Outro">Outro</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="inputCountry">País</label>
-        <input type="text" id="inputCountry" placeholder="Brasil" />
+        <label for="entradaPais">Pais</label>
+        <input type="text" id="entradaPais" placeholder="Brasil" />
       </div>
       <div class="form-group">
-        <label for="inputKinship">Parentesco</label>
-        <select id="inputKinship" disabled></select>
+        <label for="entradaParentesco">Parentesco</label>
+        <select id="entradaParentesco" disabled></select>
       </div>
-      <button class="btn btn-save" id="btnAddSave">Salvar alterações</button>
-      <button class="btn btn-cancel" id="btnAddCancel">Cancelar</button>
+      <button class="btn btn-save" id="botaoAdicionarSalvar">Salvar alteracoes</button>
+      <button class="btn btn-cancel" id="botaoAdicionarCancelar">Cancelar</button>
     </div>
   </div>
 
   <script>
-    // ===================================
-    //      VARIÁVEIS GLOBAIS
-    // ===================================
-    let view = { offsetX: 0, offsetY: 0, scale: 1 };
-    let members = [];
-    let memberCounter = 1;
+    // variaveis globais
+    let visao = { deslocamentoX: 0, deslocamentoY: 0, escala: 1 };
+    let membros = [];
+    let contadorMembros = 1;
 
-    function generateUUID() {
+    function gerarUUID() {
       return ([1e7]+-1e3+-4e3+-8e3+-1e11)
         .replace(/[018]/g, c =>
           (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
     }
 
-    function createMember(x, y, size) {
+    function criarMembro(x, y, tamanho) {
       return {
-        Id: generateUUID(),
-        Name: "Novo Membro " + memberCounter++,
-        DateOfBirth: null,
-        Gender: null,
-        Country: null,
-        DegreeKinship: null,
-        ScreenPosition: { x, y, size },
-        IsLinkOnly: false,
-        Connections: [],
-        CreateAt: new Date().toISOString(),
-        UpdatedAt: new Date().toISOString()
+        id: gerarUUID(),
+        nome: "Novo Membro " + contadorMembros++,
+        dataNascimento: null,
+        genero: null,
+        pais: null,
+        grauParentesco: null,
+        posicaoTela: { x: x, y: y, tamanho: tamanho },
+        somenteLink: false,
+        conexoes: [],
+        criadoEm: new Date().toISOString(),
+        atualizadoEm: new Date().toISOString()
       };
     }
 
-    function saveState() {
-      const state = { view, members, memberCounter };
-      localStorage.setItem("familyTreeState", JSON.stringify(state));
+    function salvarEstado() {
+      const estado = { visao: visao, membros: membros, contadorMembros: contadorMembros };
+      localStorage.setItem("estadoArvoreFamiliar", JSON.stringify(estado));
     }
-    function loadState() {
-      const saved = localStorage.getItem("familyTreeState");
-      if (saved) {
-        const st = JSON.parse(saved);
-        view          = st.view;
-        members       = st.members;
-        memberCounter = st.memberCounter;
+    function carregarEstado() {
+      const salvo = localStorage.getItem("estadoArvoreFamiliar");
+      if (salvo) {
+        const est = JSON.parse(salvo);
+        visao = est.visao;
+        membros = est.membros;
+        contadorMembros = est.contadorMembros;
       } else {
-        // Primeiro membro: "Eu"
-        const initial = createMember(350, 250, 100);
-        initial.Id            = "00000000-0000-0000-0000-000000000000";
-        initial.Name          = "Eu";
-        initial.DegreeKinship = "Eu";
-        members.push(initial);
+        // primeiro membro: "eu"
+        const inicial = criarMembro(350, 250, 100);
+        inicial.id = "00000000-0000-0000-0000-000000000000";
+        inicial.nome = "Eu";
+        inicial.grauParentesco = "Eu";
+        membros.push(inicial);
       }
     }
 
-    // REGRAS: definindo os tipos de ancestrais e descendentes.
-    const fatherLine = ["Pai", "Vô", "Bisavô", "Tataravô"];
-    const childLine  = ["Filho", "Neto", "Bisneto", "Tataraneto"];
+    // regras: definindo os tipos de ancestrais e descendentes.
+    const linhaPai = ["pai", "vo", "bisavo", "tataravo"];
+    const linhaFilho  = ["filho", "neto", "bisneto", "tataraneto"];
 
-    function getAutomaticKinship(parent, direction) {
-      const pk = parent.DegreeKinship || "Eu";
-      if (direction === "top") {
-        if (["Primo", "Irmão", "Tio"].includes(pk)) return "Tio";
-        let idx = fatherLine.indexOf(pk);
-        if (pk === "Eu" || idx === -1) return fatherLine[0];
-        if (idx < fatherLine.length - 1) return fatherLine[idx + 1];
-        return fatherLine[fatherLine.length - 1];
-      } else if (direction === "bottom") {
-        let idx = childLine.indexOf(pk);
-        if (pk === "Eu" || idx === -1) return childLine[0];
-        if (idx < childLine.length - 1) return childLine[idx + 1];
-        return childLine[childLine.length - 1];
-      } else if (direction === "left") {
-        if (pk === "Eu" || pk === "Irmão") return "Irmão";
-        return "Tio";
-      } else if (direction === "right") {
-        if (pk === "Eu" || pk === "Primo") return "Primo";
-        return "Tio";
+    function obterParentescoAutomatico(membroOrigem, direcao) {
+      const pk = membroOrigem.grauParentesco || "Eu";
+      if (direcao === "topo") {
+        if (["primo", "irmao", "tio"].includes(pk.toLowerCase())) return "tio";
+        let idx = linhaPai.indexOf(pk.toLowerCase());
+        if (pk === "Eu" || idx === -1) return linhaPai[0];
+        if (idx < linhaPai.length - 1) return linhaPai[idx + 1];
+        return linhaPai[linhaPai.length - 1];
+      } else if (direcao === "baixo") {
+        let idx = linhaFilho.indexOf(pk.toLowerCase());
+        if (pk === "Eu" || idx === -1) return linhaFilho[0];
+        if (idx < linhaFilho.length - 1) return linhaFilho[idx + 1];
+        return linhaFilho[linhaFilho.length - 1];
+      } else if (direcao === "esquerda") {
+        if (pk === "Eu" || pk.toLowerCase() === "irmao") return "irmao";
+        return "tio";
+      } else if (direcao === "direita") {
+        if (pk === "Eu" || pk.toLowerCase() === "primo") return "primo";
+        return "tio";
       }
-      return "Outro";
+      return "outro";
     }
 
-    function hasFatherOrMother(m) {
-      return m.Connections.some(conn => conn.linkType === "Pai" || conn.linkType === "Mãe");
+    function temPaiOuMae(membro) {
+      return membro.conexoes.some(con => con.tipoLink.toLowerCase() === "pai" || con.tipoLink.toLowerCase() === "mae");
     }
 
-    // =============================================================
-    // sharesParentWithAnother(m)
-    // =============================================================
-    // Se o membro m (exceto "Eu") aponta para algum ancestral (com linkType ∈ fatherLine)
-    // e existe outro membro que também aponta para esse mesmo ancestral, retorna true.
-    function sharesParentWithAnother(m) {
-      if (m.DegreeKinship === "Eu") return false; // "Eu" sempre exibe o +
-      // Pega as conexões de m que são ancestrais
-      const myAncestralConns = m.Connections.filter(conn =>
-        fatherLine.includes(conn.linkType)
-      );
-      if (myAncestralConns.length === 0) return false;
-      // Para cada conexão ancestral de m, veja se há outro membro apontando para o mesmo ancestral.
-      for (let ancConn of myAncestralConns) {
-        const ancId = ancConn.targetId;
-        let count = 0;
-        for (let other of members) {
-          if (other.IsLinkOnly) continue;
-          const c2 = other.Connections.filter(conn =>
-            fatherLine.includes(conn.linkType) && conn.targetId === ancId
-          );
+    // compartilha parentes com outro(m)
+    // se o membro m (exceto "eu") aponta para algum ancestral (com tipolink em linhapai)
+    // e existe outro membro que tambem aponta para esse mesmo ancestral, retorna true.
+    function compartilhaParentesComOutro(membro) {
+      if (membro.grauParentesco === "Eu") return false; // "eu" sempre exibe o +
+      // pega as conexoes de membro que sao ancestrais
+      const conexoesAncestrais = membro.conexoes.filter(con => linhaPai.includes(con.tipoLink.toLowerCase()));
+      if (conexoesAncestrais.length === 0) return false;
+      // para cada conexao ancestral de membro, veja se ha outro membro apontando para o mesmo ancestral.
+      for (let conAnc of conexoesAncestrais) {
+        const idAnc = conAnc.idDestino;
+        let cont = 0;
+        for (let outro of membros) {
+          if (outro.somenteLink) continue;
+          const c2 = outro.conexoes.filter(con => linhaPai.includes(con.tipoLink.toLowerCase()) && con.idDestino === idAnc);
           if (c2.length > 0) {
-            count++;
+            cont++;
           }
         }
-        if (count >= 2) return true;
+        if (cont >= 2) return true;
       }
       return false;
     }
 
-    // ---------- CAPTURA ELEMENTOS ----------
-    const modalAdd      = document.getElementById("modal-add");
-    const modalAddClose = document.getElementById("modal-add-close");
-    const inputName     = document.getElementById("inputName");
-    const inputBirth    = document.getElementById("inputBirth");
-    const inputGender   = document.getElementById("inputGender");
-    const inputCountry  = document.getElementById("inputCountry");
-    const inputKinship  = document.getElementById("inputKinship");
-    const btnAddSave    = document.getElementById("btnAddSave");
-    const btnAddCancel  = document.getElementById("btnAddCancel");
+    // captura elementos
+    const modalAdicionar = document.getElementById("modal-adicionar");
+    const modalAdicionarFechar = document.getElementById("modal-adicionar-fechar");
+    const entradaNome = document.getElementById("entradaNome");
+    const entradaNascimento = document.getElementById("entradaNascimento");
+    const entradaGenero = document.getElementById("entradaGenero");
+    const entradaPais = document.getElementById("entradaPais");
+    const entradaParentesco = document.getElementById("entradaParentesco");
+    const botaoAdicionarSalvar = document.getElementById("botaoAdicionarSalvar");
+    const botaoAdicionarCancelar = document.getElementById("botaoAdicionarCancelar");
 
-    modalAddClose.onclick = closeAddModal;
-    btnAddSave.onclick    = confirmAddMember;
-    btnAddCancel.onclick  = closeAddModal;
+    modalAdicionarFechar.onclick = fecharModalAdicionar;
+    botaoAdicionarSalvar.onclick = confirmarAdicionarMembro;
+    botaoAdicionarCancelar.onclick = fecharModalAdicionar;
 
-    let pendingParent = null;
-    let pendingDirection = null;
+    let membroPendente = null;
+    let direcaoPendente = null;
 
-    // ===========================
-    // showAddModal
-    // ===========================
+    // mostrar modal adicionar
+    function mostrarModalAdicionar(membroOrigem, direcao) {
+      membroPendente = membroOrigem;
+      direcaoPendente = direcao;
+      entradaNome.value = "";
+      entradaNascimento.value = "";
+      entradaGenero.value = "Masculino";
+      entradaPais.value = "Brasil";
+      entradaParentesco.innerHTML = "";
 
-    function showAddModal(parent, direction) {
-  pendingParent = parent;
-  pendingDirection = direction;
-  inputName.value = "";
-  inputBirth.value = "";
-  inputGender.value = "Masculino";
-  inputCountry.value = "Brasil";
-  inputKinship.innerHTML = "";
-
-  // ----- Caso "Tio" + top -----
-  if (parent.DegreeKinship === "Tio" && direction === "top") {
-    let ops = [];
-    const existingVos = members.filter(
-      m => m.DegreeKinship === "Vô" && !m.IsLinkOnly
-    );
-    existingVos.forEach(vo => {
-      const alreadyConn = parent.Connections.some(c => c.targetId === vo.Id);
-      if (!alreadyConn) {
-        ops.push({
-          value: "connect-vo-" + vo.Id,
-          label: `Conectar com Vô - ${vo.Name}`
+      // ----- caso "tio" + topo -----
+      if (membroOrigem.grauParentesco.toLowerCase() === "tio" && direcao === "topo") {
+        let ops = [];
+        const vosExistentes = membros.filter(m => m.grauParentesco.toLowerCase() === "vo" && !m.somenteLink);
+        vosExistentes.forEach(vo => {
+          const jaConectado = membroOrigem.conexoes.some(c => c.idDestino === vo.id);
+          if (!jaConectado) {
+            ops.push({
+              value: "conectar-vo-" + vo.id,
+              label: `Conectar com vo - ${vo.nome}`
+            });
+          }
         });
-      }
-    });
-    const existingTioAvos = members.filter(
-      m => m.DegreeKinship === "Tio-Avô" && !m.IsLinkOnly
-    );
-    existingTioAvos.forEach(ta => {
-      const alreadyConn = parent.Connections.some(c => c.targetId === ta.Id);
-      if (!alreadyConn) {
-        ops.push({
-          value: "connect-tioavo-" + ta.Id,
-          label: `Conectar com Tio-Avô - ${ta.Name}`
+        const tiosAvoExistentes = membros.filter(m => m.grauParentesco.toLowerCase() === "tio-avo" && !m.somenteLink);
+        tiosAvoExistentes.forEach(ta => {
+          const jaConectado = membroOrigem.conexoes.some(c => c.idDestino === ta.id);
+          if (!jaConectado) {
+            ops.push({
+              value: "conectar-tioavo-" + ta.id,
+              label: `Conectar com tio-avo - ${ta.nome}`
+            });
+          }
         });
+        ops.push({
+          value: "criar-tioavo",
+          label: "Criar novo tio-avo"
+        });
+        ops.forEach(({ value, label }) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          entradaParentesco.appendChild(opt);
+        });
+        entradaParentesco.disabled = false;
+        modalAdicionar.style.display = "block";
+        return;
       }
-    });
-    ops.push({
-      value: "create-tioavo",
-      label: "Criar Novo Tio-Avô"
-    });
-    ops.forEach(({ value, label }) => {
+
+      // ----- caso "tio-avo" + topo -----
+      if (membroOrigem.grauParentesco.toLowerCase() === "tio-avo" && direcao === "topo") {
+        let ops = [];
+        const bisavosExistentes = membros.filter(m => m.grauParentesco.toLowerCase() === "bisavo" && !m.somenteLink);
+        bisavosExistentes.forEach(bv => {
+          const jaConectado = membroOrigem.conexoes.some(c => c.idDestino === bv.id);
+          if (!jaConectado) {
+            ops.push({
+              value: "conectar-bisavo-" + bv.id,
+              label: `Conectar com bisavo - ${bv.nome}`
+            });
+          }
+        });
+        ops.forEach(({ value, label }) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          entradaParentesco.appendChild(opt);
+        });
+        entradaParentesco.disabled = false;
+        modalAdicionar.style.display = "block";
+        return;
+      }
+
+      // ----- caso "primo" + topo -----
+      if (membroOrigem.grauParentesco.toLowerCase() === "primo" && direcao === "topo") {
+        let ops = [];
+        // buscamos todos os membros com grau de parentesco "tio"
+        const tiosExistentes = membros.filter(m => m.grauParentesco.toLowerCase() === "tio" && !m.somenteLink);
+        tiosExistentes.forEach(tio => {
+          // verifica se o primo ja esta conectado a esse tio
+          const jaConectado = membroOrigem.conexoes.some(c => c.idDestino === tio.id);
+          if (!jaConectado) {
+            ops.push({
+              value: "conectar-tio-" + tio.id,
+              label: `Conectar com tio - ${tio.nome}`
+            });
+          }
+        });
+        // opcao de criar um novo tio
+        ops.push({
+          value: "criar-tio",
+          label: "Criar novo tio"
+        });
+        ops.forEach(({ value, label }) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          entradaParentesco.appendChild(opt);
+        });
+        entradaParentesco.disabled = false;
+        modalAdicionar.style.display = "block";
+        return;
+      }
+
+      // ----- caso normal (ex. eu, irmao, filho, etc.) -----
+      const parentescoAuto = obterParentescoAutomatico(membroOrigem, direcao);
       const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = label;
-      inputKinship.appendChild(opt);
-    });
-    inputKinship.disabled = false;
-    modalAdd.style.display = "block";
-    return;
-  }
-
-  // ----- Caso "Tio-Avô" + top -----
-  if (parent.DegreeKinship === "Tio-Avô" && direction === "top") {
-    let ops = [];
-    const existingBisavos = members.filter(
-      m => m.DegreeKinship === "Bisavô" && !m.IsLinkOnly
-    );
-    existingBisavos.forEach(bv => {
-      const alreadyConn = parent.Connections.some(c => c.targetId === bv.Id);
-      if (!alreadyConn) {
-        ops.push({
-          value: "connect-bisavo-" + bv.Id,
-          label: `Conectar com Bisavô - ${bv.Name}`
-        });
-      }
-    });
-    ops.forEach(({ value, label }) => {
-      const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = label;
-      inputKinship.appendChild(opt);
-    });
-    inputKinship.disabled = false;
-    modalAdd.style.display = "block";
-    return;
-  }
-
-  // ----- Caso "Primo" + top -----
-  if (parent.DegreeKinship === "Primo" && direction === "top") {
-    let ops = [];
-    // Buscamos todos os membros com grau de parentesco "Tio"
-    const existingTios = members.filter(
-      m => m.DegreeKinship === "Tio" && !m.IsLinkOnly
-    );
-    existingTios.forEach(tio => {
-      // Verifica se o Primo já está conectado a esse Tio
-      const alreadyConn = parent.Connections.some(c => c.targetId === tio.Id);
-      if (!alreadyConn) {
-        ops.push({
-          value: "connect-tio-" + tio.Id,
-          label: `Conectar com Tio - ${tio.Name}`
-        });
-      }
-    });
-    // Opção de criar um novo Tio
-    ops.push({
-      value: "create-tio",
-      label: "Criar Novo Tio"
-    });
-    ops.forEach(({ value, label }) => {
-      const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = label;
-      inputKinship.appendChild(opt);
-    });
-    inputKinship.disabled = false;
-    modalAdd.style.display = "block";
-    return;
-  }
-
-  // ----- Caso normal (ex. Eu, Irmão, Filho, etc.) -----
-  const autoKin = getAutomaticKinship(parent, direction);
-  const opt = document.createElement("option");
-  opt.value = autoKin;
-  opt.textContent = autoKin;
-  inputKinship.appendChild(opt);
-  inputKinship.disabled = true;
-  modalAdd.style.display = "block";
-}
-
-    function closeAddModal() {
-      modalAdd.style.display = "none";
-      pendingParent = null;
-      pendingDirection = null;
+      opt.value = parentescoAuto;
+      opt.textContent = parentescoAuto;
+      entradaParentesco.appendChild(opt);
+      entradaParentesco.disabled = true;
+      modalAdicionar.style.display = "block";
     }
 
-    function confirmAddMember() {
-      if (!pendingParent || !pendingDirection) {
-        closeAddModal();
+    function fecharModalAdicionar() {
+      modalAdicionar.style.display = "none";
+      membroPendente = null;
+      direcaoPendente = null;
+    }
+
+    function confirmarAdicionarMembro() {
+      if (!membroPendente || !direcaoPendente) {
+        fecharModalAdicionar();
         return;
       }
-      const selectedVal = inputKinship.value;
+      const valorSelecionado = entradaParentesco.value;
 
-      // -------------- Conexões especiais --------------
-      // (Tio + top) -> conectar a Vô existente
-      if (selectedVal.startsWith("connect-vo-")) {
-        const voId = selectedVal.replace("connect-vo-", "");
-        const existingVo = members.find(m => m.Id === voId);
-        if (existingVo) {
-          pendingParent.Connections.push({
-            targetId: existingVo.Id,
-            direction: pendingDirection,
-            linkType: "Vô",
-            isLinkOnly: false
+      // conexoes especiais
+      // (tio + topo) -> conectar a vo existente
+      if (valorSelecionado.startsWith("conectar-vo-")) {
+        const idVo = valorSelecionado.replace("conectar-vo-", "");
+        const voExistente = membros.find(m => m.id === idVo);
+        if (voExistente) {
+          membroPendente.conexoes.push({
+            idDestino: voExistente.id,
+            direcao: direcaoPendente,
+            tipoLink: "vo",
+            somenteLink: false
           });
         }
-        closeAddModal();
-        drawAll();
-        saveState();
+        fecharModalAdicionar();
+        desenharTudo();
+        salvarEstado();
         return;
       }
 
-      // (Tio + top) -> conectar a Tio-Avô existente
-      if (selectedVal.startsWith("connect-tioavo-")) {
-        const taId = selectedVal.replace("connect-tioavo-", "");
-        const existingTa = members.find(m => m.Id === taId);
-        if (existingTa) {
-          pendingParent.Connections.push({
-            targetId: existingTa.Id,
-            direction: pendingDirection,
-            linkType: "Tio-Avô",
-            isLinkOnly: false
+      // (tio + topo) -> conectar a tio-avo existente
+      if (valorSelecionado.startsWith("conectar-tioavo-")) {
+        const idTioAvo = valorSelecionado.replace("conectar-tioavo-", "");
+        const tioAvoExistente = membros.find(m => m.id === idTioAvo);
+        if (tioAvoExistente) {
+          membroPendente.conexoes.push({
+            idDestino: tioAvoExistente.id,
+            direcao: direcaoPendente,
+            tipoLink: "tio-avo",
+            somenteLink: false
           });
         }
-        closeAddModal();
-        drawAll();
-        saveState();
+        fecharModalAdicionar();
+        desenharTudo();
+        salvarEstado();
         return;
       }
 
-      // (Tio + top) -> criar novo Tio-Avô
-      if (selectedVal === "create-tioavo") {
-        createAndConnect("Tio-Avô");
+      // (tio + topo) -> criar novo tio-avo
+      if (valorSelecionado === "criar-tioavo") {
+        criarEConectar("tio-avo");
         return;
       }
 
-      // (Tio-Avô + top) -> conectar a Bisavô existente
-      if (selectedVal.startsWith("connect-bisavo-")) {
-        const bvId = selectedVal.replace("connect-bisavo-", "");
-        const existingBv = members.find(m => m.Id === bvId);
-        if (existingBv) {
-          pendingParent.Connections.push({
-            targetId: existingBv.Id,
-            direction: pendingDirection,
-            linkType: "Bisavô",
-            isLinkOnly: false
+      // (tio-avo + topo) -> conectar a bisavo existente
+      if (valorSelecionado.startsWith("conectar-bisavo-")) {
+        const idBisavo = valorSelecionado.replace("conectar-bisavo-", "");
+        const bisavoExistente = membros.find(m => m.id === idBisavo);
+        if (bisavoExistente) {
+          membroPendente.conexoes.push({
+            idDestino: bisavoExistente.id,
+            direcao: direcaoPendente,
+            tipoLink: "bisavo",
+            somenteLink: false
           });
         }
-        closeAddModal();
-        drawAll();
-        saveState();
+        fecharModalAdicionar();
+        desenharTudo();
+        salvarEstado();
         return;
       }
 
-      // (Primo + bottom) -> conectar a Tio existente
-      if (selectedVal.startsWith("connect-tio-")) {
-        const tioId = selectedVal.replace("connect-tio-", "");
-        const existingTio = members.find(m => m.Id === tioId);
-        if (existingTio) {
-          pendingParent.Connections.push({
-            targetId: existingTio.Id,
-            direction: pendingDirection,
-            linkType: "Tio",
-            isLinkOnly: false
+      // (primo + baixo) -> conectar a tio existente
+      if (valorSelecionado.startsWith("conectar-tio-")) {
+        const idTio = valorSelecionado.replace("conectar-tio-", "");
+        const tioExistente = membros.find(m => m.id === idTio);
+        if (tioExistente) {
+          membroPendente.conexoes.push({
+            idDestino: tioExistente.id,
+            direcao: direcaoPendente,
+            tipoLink: "tio",
+            somenteLink: false
           });
         }
-        closeAddModal();
-        drawAll();
-        saveState();
+        fecharModalAdicionar();
+        desenharTudo();
+        salvarEstado();
         return;
       }
 
-      // (Primo + bottom) -> criar novo Tio
-      if (selectedVal === "create-tio") {
-        createAndConnect("Tio");
+      // (primo + baixo) -> criar novo tio
+      if (valorSelecionado === "criar-tio") {
+        criarEConectar("tio");
         return;
       }
 
-      // -------------- Caso normal (ex: Filho, Irmão, etc.) --------------
-      createAndConnect(selectedVal);
+      // caso normal (ex: filho, irmao, etc.)
+      criarEConectar(valorSelecionado);
 
-      function createAndConnect(kin) {
-        const pPos = pendingParent.ScreenPosition;
-        let x = pPos.x, y = pPos.y, s = pPos.size;
-        if (pendingDirection === "top")    y = pPos.y - s;
-        if (pendingDirection === "bottom") y = pPos.y + s;
-        if (pendingDirection === "left")   x = pPos.x - s;
-        if (pendingDirection === "right")  x = pPos.x + s;
+      function criarEConectar(tipo) {
+        const posOrigem = membroPendente.posicaoTela;
+        let x = posOrigem.x, y = posOrigem.y, t = posOrigem.tamanho;
+        if (direcaoPendente === "topo")    y = posOrigem.y - t;
+        if (direcaoPendente === "baixo")   y = posOrigem.y + t;
+        if (direcaoPendente === "esquerda") x = posOrigem.x - t;
+        if (direcaoPendente === "direita")  x = posOrigem.x + t;
 
-        const newMember = createMember(x, y, s);
-        newMember.Name          = inputName.value || ("Membro " + memberCounter);
-        newMember.DegreeKinship = kin;
-        newMember.DateOfBirth   = inputBirth.value;
-        newMember.Gender        = inputGender.value;
-        newMember.Country       = inputCountry.value;
-        members.push(newMember);
+        const novoMembro = criarMembro(x, y, t);
+        novoMembro.nome = entradaNome.value || ("Membro " + contadorMembros);
+        novoMembro.grauParentesco = tipo;
+        novoMembro.dataNascimento = entradaNascimento.value;
+        novoMembro.genero = entradaGenero.value;
+        novoMembro.pais = entradaPais.value;
+        membros.push(novoMembro);
 
-        pendingParent.Connections.push({
-          targetId: newMember.Id,
-          direction: pendingDirection,
-          linkType: kin,
-          isLinkOnly: false
+        membroPendente.conexoes.push({
+          idDestino: novoMembro.id,
+          direcao: direcaoPendente,
+          tipoLink: tipo,
+          somenteLink: false
         });
 
-        closeAddModal();
-        drawAll();
-        saveState();
+        fecharModalAdicionar();
+        desenharTudo();
+        salvarEstado();
       }
     }
 
-    // ========== DESENHO ==========
-    const canvasEl = document.getElementById("myCanvas");
-    const ctx = canvasEl.getContext("2d");
+    // desenho
+    const elementoCanvas = document.getElementById("meuCanvas");
+    const contexto = elementoCanvas.getContext("2d");
 
-    function drawAll() {
-      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-      ctx.save();
-      ctx.translate(view.offsetX, view.offsetY);
-      ctx.scale(view.scale, view.scale);
-      drawGrid();
-      drawConnections();
-      drawMembers();
-      ctx.restore();
+    function desenharTudo() {
+      contexto.clearRect(0, 0, elementoCanvas.width, elementoCanvas.height);
+      contexto.save();
+      contexto.translate(visao.deslocamentoX, visao.deslocamentoY);
+      contexto.scale(visao.escala, visao.escala);
+      desenharGrade();
+      desenharConexoes();
+      desenharMembros();
+      contexto.restore();
     }
 
-    function drawGrid() {
-      const gridSize = 20;
-      ctx.strokeStyle = "#ccc";
-      ctx.lineWidth = 0.5 / view.scale;
-      let left   = -view.offsetX / view.scale;
-      let top    = -view.offsetY / view.scale;
-      let right  = left + canvasEl.width / view.scale;
-      let bottom = top + canvasEl.height / view.scale;
-      let startX = Math.floor(left / gridSize) * gridSize;
-      let startY = Math.floor(top / gridSize) * gridSize;
+    function desenharGrade() {
+      const tamanhoGrade = 20;
+      contexto.strokeStyle = "#ccc";
+      contexto.lineWidth = 0.5 / visao.escala;
+      let esquerda = -visao.deslocamentoX / visao.escala;
+      let topo = -visao.deslocamentoY / visao.escala;
+      let direita = esquerda + elementoCanvas.width / visao.escala;
+      let base = topo + elementoCanvas.height / visao.escala;
+      let inicioX = Math.floor(esquerda / tamanhoGrade) * tamanhoGrade;
+      let inicioY = Math.floor(topo / tamanhoGrade) * tamanhoGrade;
 
-      for (let x = startX; x <= right; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, top);
-        ctx.lineTo(x, bottom);
-        ctx.stroke();
+      for (let x = inicioX; x <= direita; x += tamanhoGrade) {
+        contexto.beginPath();
+        contexto.moveTo(x, topo);
+        contexto.lineTo(x, base);
+        contexto.stroke();
       }
-      for (let y = startY; y <= bottom; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(left, y);
-        ctx.lineTo(right, y);
-        ctx.stroke();
+      for (let y = inicioY; y <= base; y += tamanhoGrade) {
+        contexto.beginPath();
+        contexto.moveTo(esquerda, y);
+        contexto.lineTo(direita, y);
+        contexto.stroke();
       }
     }
 
-    function drawConnections() {
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2 / view.scale;
-      members.forEach(m => {
-        if (m.IsLinkOnly) return;
-        const posM = m.ScreenPosition;
-        m.Connections.forEach(conn => {
-          const target = members.find(x => x.Id === conn.targetId);
-          if (!target) return;
-          const posT = target.ScreenPosition;
-          let startX, startY, endX, endY;
-          if (conn.direction === "top") {
-            startX = posM.x + posM.size / 2;
-            startY = posM.y;
-            endX = posT.x + posT.size / 2;
-            endY = posT.y + posT.size;
-          } else if (conn.direction === "bottom") {
-            startX = posM.x + posM.size / 2;
-            startY = posM.y + posM.size;
-            endX = posT.x + posT.size / 2;
-            endY = posT.y;
-          } else if (conn.direction === "left") {
-            startX = posM.x;
-            startY = posM.y + posM.size / 2;
-            endX = posT.x + posT.size;
-            endY = posT.y + posT.size / 2;
-          } else if (conn.direction === "right") {
-            startX = posM.x + posM.size;
-            startY = posM.y + posM.size / 2;
-            endX = posT.x;
-            endY = posT.y + posT.size / 2;
+    function desenharConexoes() {
+      contexto.strokeStyle = "blue";
+      contexto.lineWidth = 2 / visao.escala;
+      membros.forEach(membro => {
+        if (membro.somenteLink) return;
+        const posM = membro.posicaoTela;
+        membro.conexoes.forEach(con => {
+          const destino = membros.find(x => x.id === con.idDestino);
+          if (!destino) return;
+          const posD = destino.posicaoTela;
+          let inicioX, inicioY, fimX, fimY;
+          if (con.direcao === "topo") {
+            inicioX = posM.x + posM.tamanho / 2;
+            inicioY = posM.y;
+            fimX = posD.x + posD.tamanho / 2;
+            fimY = posD.y + posD.tamanho;
+          } else if (con.direcao === "baixo") {
+            inicioX = posM.x + posM.tamanho / 2;
+            inicioY = posM.y + posM.tamanho;
+            fimX = posD.x + posD.tamanho / 2;
+            fimY = posD.y;
+          } else if (con.direcao === "esquerda") {
+            inicioX = posM.x;
+            inicioY = posM.y + posM.tamanho / 2;
+            fimX = posD.x + posD.tamanho;
+            fimY = posD.y + posD.tamanho / 2;
+          } else if (con.direcao === "direita") {
+            inicioX = posM.x + posM.tamanho;
+            inicioY = posM.y + posM.tamanho / 2;
+            fimX = posD.x;
+            fimY = posD.y + posD.tamanho / 2;
           } else {
             // fallback
-            startX = posM.x + posM.size / 2;
-            startY = posM.y + posM.size / 2;
-            endX = posT.x + posT.size / 2;
-            endY = posT.y + posT.size / 2;
+            inicioX = posM.x + posM.tamanho / 2;
+            inicioY = posM.y + posM.tamanho / 2;
+            fimX = posD.x + posD.tamanho / 2;
+            fimY = posD.y + posD.tamanho / 2;
           }
-          ctx.beginPath();
-          ctx.moveTo(startX, startY);
-          ctx.lineTo(endX, endY);
-          ctx.stroke();
+          contexto.beginPath();
+          contexto.moveTo(inicioX, inicioY);
+          contexto.lineTo(fimX, fimY);
+          contexto.stroke();
         });
       });
     }
 
-    // Offset para posicionar o "+" mais afastado do quadrado
-    const offsetDistance = 20;
+    // offset para posicionar o "+" mais afastado do quadrado
+    const distanciaDeslocamento = 20;
 
-    function drawPlus(cx, cy) {
-      ctx.save();
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 3;
+    function desenharMais(cx, cy) {
+      contexto.save();
+      contexto.strokeStyle = "black";
+      contexto.lineWidth = 3;
       const r = 10;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx, cy + r);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(cx - r, cy);
-      ctx.lineTo(cx + r, cy);
-      ctx.stroke();
-      ctx.restore();
+      contexto.beginPath();
+      contexto.moveTo(cx, cy - r);
+      contexto.lineTo(cx, cy + r);
+      contexto.stroke();
+      contexto.beginPath();
+      contexto.moveTo(cx - r, cy);
+      contexto.lineTo(cx + r, cy);
+      contexto.stroke();
+      contexto.restore();
     }
 
-    // =============== DESENHA OS MEMBROS ===============
-    function drawMembers() {
-      members.forEach(m => {
-        if (m.IsLinkOnly) return;
-        const pos = m.ScreenPosition;
-        ctx.fillStyle = "#4CAF50";
-        ctx.fillRect(pos.x, pos.y, pos.size, pos.size);
-        const half = pos.size / 2;
+    function desenharMembros() {
+      membros.forEach(membro => {
+        if (membro.somenteLink) return;
+        const pos = membro.posicaoTela;
+        contexto.fillStyle = "#4CAF50";
+        contexto.fillRect(pos.x, pos.y, pos.tamanho, pos.tamanho);
+        const metade = pos.tamanho / 2;
         
-        // Se m não for "Eu" e compartilhar um ancestral com outro, não desenha "+"
-        if (m.DegreeKinship !== "Eu" && sharesParentWithAnother(m)) {
-          drawMemberText(m);
+        // se membro nao for "eu" e compartilhar um ancestral com outro, nao desenha "+"
+        if (membro.grauParentesco !== "Eu" && compartilhaParentesComOutro(membro)) {
+          desenharTextoMembro(membro);
           return;
         }
         
-        // Desenha "+" no topo se não tiver Pai/Mãe e não for "Irmão"
-        if (!hasFatherOrMother(m) && m.DegreeKinship !== "Irmão") {
-          drawPlus(pos.x + half, pos.y - offsetDistance);
+        // desenha "+" no topo se nao tiver pai/mae e nao for "irmao"
+        if (!temPaiOuMae(membro) && membro.grauParentesco.toLowerCase() !== "irmao") {
+          desenharMais(pos.x + metade, pos.y - distanciaDeslocamento);
         }
 
-        // Desenha "+" embaixo e laterais para "Eu", "Irmão" e "Primo"
-        if (["Eu", "Irmão", "Primo"].includes(m.DegreeKinship)) {
+        // desenha "+" embaixo e laterais para "eu", "irmao" e "primo"
+        if (["Eu", "irmao", "primo"].includes(membro.grauParentesco)) {
           // embaixo
-          drawPlus(pos.x + half, pos.y + pos.size + offsetDistance);
+          desenharMais(pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento);
 
-          // Para "Eu" e "Irmão", desenha "+" à esquerda
-          if (m.DegreeKinship !== "Primo") {
-            drawPlus(pos.x - offsetDistance, pos.y + half);
+          // para "eu" e "irmao", desenha "+" a esquerda
+          if (membro.grauParentesco.toLowerCase() !== "primo") {
+            desenharMais(pos.x - distanciaDeslocamento, pos.y + metade);
           }
-          // Para "Eu", desenha "+" à direita
-          if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
-            drawPlus(pos.x + pos.size + offsetDistance, pos.y + half);
+          // para "eu", desenha "+" a direita
+          if (membro.grauParentesco.toLowerCase() !== "irmao" && membro.grauParentesco.toLowerCase() !== "primo") {
+            desenharMais(pos.x + pos.tamanho + distanciaDeslocamento, pos.y + metade);
           }
         }
 
-        drawMemberText(m);
+        desenharTextoMembro(membro);
       });
     }
 
-    function drawMemberText(m) {
-      const pos = m.ScreenPosition;
-      ctx.fillStyle = "white";
-      ctx.font = `bold ${12 / view.scale}px Arial`;
-      ctx.fillText("editar", pos.x + pos.size - 50, pos.y + pos.size - 5);
-      ctx.fillStyle = "black";
-      ctx.font = `${12 / view.scale}px Arial`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.fillText(m.DegreeKinship || "", pos.x + pos.size / 2, pos.y + 2);
-      ctx.font = `${14 / view.scale}px Arial`;
-      ctx.textBaseline = "middle";
-      ctx.fillText(m.Name, pos.x + pos.size / 2, pos.y + pos.size / 2);
+    function desenharTextoMembro(membro) {
+      const pos = membro.posicaoTela;
+      contexto.fillStyle = "white";
+      contexto.font = `bold ${12 / visao.escala}px Arial`;
+      contexto.fillText("editar", pos.x + pos.tamanho - 50, pos.y + pos.tamanho - 5);
+      contexto.fillStyle = "black";
+      contexto.font = `${12 / visao.escala}px Arial`;
+      contexto.textAlign = "center";
+      contexto.textBaseline = "top";
+      contexto.fillText(membro.grauParentesco || "", pos.x + pos.tamanho / 2, pos.y + 2);
+      contexto.font = `${14 / visao.escala}px Arial`;
+      contexto.textBaseline = "middle";
+      contexto.fillText(membro.nome, pos.x + pos.tamanho / 2, pos.y + pos.tamanho / 2);
     }
 
-    // ======= Arraste e Zoom =======
-    let draggingMember = null;
-    let dragOffset = { x: 0, y: 0 };
-    let gridDragging = false;
-    let gridDragStart = { x: 0, y: 0 };
-    let initialViewOffset = { offsetX: 0, offsetY: 0 };
+    // arraste e zoom
+    let membroArrastando = null;
+    let deslocamentoArraste = { x: 0, y: 0 };
+    let arrastandoGrade = false;
+    let inicioArrasteGrade = { x: 0, y: 0 };
+    let deslocamentoInicialVisao = { deslocamentoX: 0, deslocamentoY: 0 };
 
-    canvasEl.addEventListener("wheel", (e) => {
+    elementoCanvas.addEventListener("wheel", (e) => {
       e.preventDefault();
       const mx = e.offsetX, my = e.offsetY;
-      const before = getWorldCoords(mx, my);
-      // Zoom in/out
-      if (e.deltaY < 0) view.scale *= 1.1;
-      else view.scale /= 1.1;
-      view.offsetX = mx - before.x * view.scale;
-      view.offsetY = my - before.y * view.scale;
-      drawAll();
-      saveState();
+      const antes = obterCoordenadasMundo(mx, my);
+      // zoom in/out
+      if (e.deltaY < 0) visao.escala *= 1.1;
+      else visao.escala /= 1.1;
+      visao.deslocamentoX = mx - antes.x * visao.escala;
+      visao.deslocamentoY = my - antes.y * visao.escala;
+      desenharTudo();
+      salvarEstado();
     });
 
-    canvasEl.addEventListener("mousedown", handleStart);
-    canvasEl.addEventListener("touchstart", handleStart);
-    canvasEl.addEventListener("mousemove", handleMove);
-    canvasEl.addEventListener("touchmove", handleMove);
-    canvasEl.addEventListener("mouseup", handleEnd);
-    canvasEl.addEventListener("touchend", handleEnd);
-    canvasEl.addEventListener("touchcancel", handleEnd);
+    elementoCanvas.addEventListener("mousedown", tratarInicio);
+    elementoCanvas.addEventListener("touchstart", tratarInicio);
+    elementoCanvas.addEventListener("mousemove", tratarMovimento);
+    elementoCanvas.addEventListener("touchmove", tratarMovimento);
+    elementoCanvas.addEventListener("mouseup", tratarFim);
+    elementoCanvas.addEventListener("touchend", tratarFim);
+    elementoCanvas.addEventListener("touchcancel", tratarFim);
 
-    function getPointerCoords(e) {
-      const rect = canvasEl.getBoundingClientRect();
+    function obterCoordenadasPonteiro(e) {
+      const retangulo = elementoCanvas.getBoundingClientRect();
       if (e.touches && e.touches.length > 0) {
-        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+        return { x: e.touches[0].clientX - retangulo.left, y: e.touches[0].clientY - retangulo.top };
       }
       return { x: e.offsetX, y: e.offsetY };
     }
-    function getWorldCoords(mx, my) {
+    function obterCoordenadasMundo(mx, my) {
       return {
-        x: (mx - view.offsetX) / view.scale,
-        y: (my - view.offsetY) / view.scale
+        x: (mx - visao.deslocamentoX) / visao.escala,
+        y: (my - visao.deslocamentoY) / visao.escala
       };
     }
 
-    function handleStart(e) {
+    function tratarInicio(e) {
       e.preventDefault();
-      const pointer = getPointerCoords(e);
-      const worldPos = getWorldCoords(pointer.x, pointer.y);
-      const mx = worldPos.x, my = worldPos.y;
+      const ponteiro = obterCoordenadasPonteiro(e);
+      const posMundo = obterCoordenadasMundo(ponteiro.x, ponteiro.y);
+      const mx = posMundo.x, my = posMundo.y;
 
-      // 1) Verifica clique no "+"
-      for (let m of members) {
-        if (m.IsLinkOnly) continue;
-        const pos = m.ScreenPosition;
-        const half = pos.size / 2;
+      // 1) verifica clique no "+"
+      for (let membro of membros) {
+        if (membro.somenteLink) continue;
+        const pos = membro.posicaoTela;
+        const metade = pos.tamanho / 2;
 
         // "+" no topo
-        if (!hasFatherOrMother(m) && m.DegreeKinship !== "Irmão") {
-          if (isClickedPlus(mx, my, pos.x + half, pos.y - offsetDistance)) {
-            showAddModal(m, "top");
+        if (!temPaiOuMae(membro) && membro.grauParentesco.toLowerCase() !== "irmao") {
+          if (clicouNoMais(mx, my, pos.x + metade, pos.y - distanciaDeslocamento)) {
+            mostrarModalAdicionar(membro, "topo");
             return;
           }
         }
 
-        // "+" embaixo e laterais para Eu, Irmão, Primo
-        if (["Eu", "Irmão", "Primo"].includes(m.DegreeKinship)) {
+        // "+" embaixo e laterais para eu, irmao, primo
+        if (["Eu", "irmao", "primo"].includes(membro.grauParentesco)) {
           // embaixo
-          if (isClickedPlus(mx, my, pos.x + half, pos.y + pos.size + offsetDistance)) {
-            showAddModal(m, "bottom");
+          if (clicouNoMais(mx, my, pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento)) {
+            mostrarModalAdicionar(membro, "baixo");
             return;
           }
           // esquerda
-          if (m.DegreeKinship !== "Primo") {
-            if (isClickedPlus(mx, my, pos.x - offsetDistance, pos.y + half)) {
-              showAddModal(m, "left");
+          if (membro.grauParentesco.toLowerCase() !== "primo") {
+            if (clicouNoMais(mx, my, pos.x - distanciaDeslocamento, pos.y + metade)) {
+              mostrarModalAdicionar(membro, "esquerda");
               return;
             }
           }
           // direita
-          if (m.DegreeKinship !== "Irmão" && m.DegreeKinship !== "Primo") {
-            if (isClickedPlus(mx, my, pos.x + pos.size + offsetDistance, pos.y + half)) {
-              showAddModal(m, "right");
+          if (membro.grauParentesco.toLowerCase() !== "irmao" && membro.grauParentesco.toLowerCase() !== "primo") {
+            if (clicouNoMais(mx, my, pos.x + pos.tamanho + distanciaDeslocamento, pos.y + metade)) {
+              mostrarModalAdicionar(membro, "direita");
               return;
             }
           }
         }
       }
 
-      // 2) Verifica se clicou no quadrado para arrastar
-      for (let i = members.length - 1; i >= 0; i--) {
-        const m = members[i];
-        if (m.IsLinkOnly) continue;
-        const pos = m.ScreenPosition;
-        if (isPointInRect(mx, my, pos.x, pos.y, pos.size, pos.size)) {
-          draggingMember = m;
-          dragOffset.x = mx - pos.x;
-          dragOffset.y = my - pos.y;
+      // 2) verifica se clicou no quadrado para arrastar
+      for (let i = membros.length - 1; i >= 0; i--) {
+        const membro = membros[i];
+        if (membro.somenteLink) continue;
+        const pos = membro.posicaoTela;
+        if (pontoDentroRetangulo(mx, my, pos.x, pos.y, pos.tamanho, pos.tamanho)) {
+          membroArrastando = membro;
+          deslocamentoArraste.x = mx - pos.x;
+          deslocamentoArraste.y = my - pos.y;
           return;
         }
       }
       
-      // 3) Arrasta grid
-      gridDragging = true;
-      gridDragStart = { x: pointer.x, y: pointer.y };
-      initialViewOffset = { offsetX: view.offsetX, offsetY: view.offsetY };
+      // 3) arrasta grade
+      arrastandoGrade = true;
+      inicioArrasteGrade = { x: ponteiro.x, y: ponteiro.y };
+      deslocamentoInicialVisao = { deslocamentoX: visao.deslocamentoX, deslocamentoY: visao.deslocamentoY };
     }
 
-    function handleMove(e) {
+    function tratarMovimento(e) {
       e.preventDefault();
-      const pointer = getPointerCoords(e);
+      const ponteiro = obterCoordenadasPonteiro(e);
 
-      if (draggingMember) {
-        const worldPos = getWorldCoords(pointer.x, pointer.y);
-        draggingMember.ScreenPosition.x = worldPos.x - dragOffset.x;
-        draggingMember.ScreenPosition.y = worldPos.y - dragOffset.y;
-        drawAll();
-      } else if (gridDragging) {
-        const dx = pointer.x - gridDragStart.x;
-        const dy = pointer.y - gridDragStart.y;
-        view.offsetX = initialViewOffset.offsetX + dx;
-        view.offsetY = initialViewOffset.offsetY + dy;
-        drawAll();
+      if (membroArrastando) {
+        const posMundo = obterCoordenadasMundo(ponteiro.x, ponteiro.y);
+        membroArrastando.posicaoTela.x = posMundo.x - deslocamentoArraste.x;
+        membroArrastando.posicaoTela.y = posMundo.y - deslocamentoArraste.y;
+        desenharTudo();
+      } else if (arrastandoGrade) {
+        const dx = ponteiro.x - inicioArrasteGrade.x;
+        const dy = ponteiro.y - inicioArrasteGrade.y;
+        visao.deslocamentoX = deslocamentoInicialVisao.deslocamentoX + dx;
+        visao.deslocamentoY = deslocamentoInicialVisao.deslocamentoY + dy;
+        desenharTudo();
       }
     }
 
-    function handleEnd(e) {
+    function tratarFim(e) {
       e.preventDefault();
-      if (draggingMember || gridDragging) {
-        saveState();
+      if (membroArrastando || arrastandoGrade) {
+        salvarEstado();
       }
-      draggingMember = null;
-      gridDragging = false;
+      membroArrastando = null;
+      arrastandoGrade = false;
     }
 
-    function isPointInRect(px, py, cx, cy, w, h) {
-      return px >= cx && px <= cx + w && py >= cy && py <= cy + h;
+    function pontoDentroRetangulo(px, py, cx, cy, largura, altura) {
+      return px >= cx && px <= cx + largura && py >= cy && py <= cy + altura;
     }
-    function isClickedPlus(mx, my, cx, cy) {
+    function clicouNoMais(mx, my, cx, cy) {
       const dx = mx - cx;
       const dy = my - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      return dist <= 10; 
+      const distancia = Math.sqrt(dx * dx + dy * dy);
+      return distancia <= 10; 
     }
 
-    // Inicializa
-    loadState();
-    drawAll();
+    // inicializa
+    carregarEstado();
+    desenharTudo();
   </script>
 </body>
 </html>
