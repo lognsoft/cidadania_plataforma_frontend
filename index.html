@@ -289,6 +289,8 @@
               ops.push({ value: "conectar-bisavô-" + bv.id, label: "Conectar com bisavô - " + bv.nome });
             }
           });
+          // Sempre adicionar a opção de criar um novo tio bisavô
+          ops.push({ value: "criar-tio-bisavô", label: "Criar novo tio bisavô" });
           ops.forEach(({ value, label }) => {
             const opt = document.createElement("option");
             opt.value = value;
@@ -382,6 +384,14 @@
         salvarEstado();
         return;
       }
+      if (valorSelecionado === "criar-tio-bisavô") {
+        criarEConectar("tio bisavô");
+        return;
+      }
+      if (valorSelecionado === "criar-tioavô") {
+        criarEConectar("tio-avô");
+        return;
+      }
       if (valorSelecionado.startsWith("conectar-tioavô-")) {
         const idTioAvô = valorSelecionado.replace("conectar-tioavô-", "");
         const tioAvôExistente = membros.find(m => m.id === idTioAvô);
@@ -396,10 +406,6 @@
         fecharModalAdicionar();
         desenharTudo();
         salvarEstado();
-        return;
-      }
-      if (valorSelecionado === "criar-tioavô") {
-        criarEConectar("tio-avô");
         return;
       }
       if (valorSelecionado.startsWith("conectar-bisavô-")) {
