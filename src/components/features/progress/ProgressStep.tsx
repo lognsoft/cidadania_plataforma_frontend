@@ -14,7 +14,7 @@ const ProgressStep = ({ progress = 25 }:{progress:number}) => {
       <h4 className="font-lilita hidden md:block text-text-default-quinary">
         Apenas alguns passos
       </h4>
-      <div className="progress">
+      <div className="progress bg-white">
         <div
           className="progress-bar"
           data-progress={`${displayProgress}%`}

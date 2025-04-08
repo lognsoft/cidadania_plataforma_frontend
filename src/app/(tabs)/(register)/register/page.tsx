@@ -10,7 +10,7 @@ function RegisterPage() {
 
   return (
     <div className="center">
-      <p className="text-center mb-7 md:hidden">
+      <p className="text-center mb-3 mt-4 md:hidden">
         Conta rapidinho, como você encontrou o Rooteasy?
       </p>
       <div className="grid-aside">

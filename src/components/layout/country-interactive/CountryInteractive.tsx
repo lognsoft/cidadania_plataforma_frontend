@@ -28,7 +28,7 @@ const CountryInteractive = () => {
 
   return (
     <div className="center">
-      <div className="register-page grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-2">
+      <div className="register-page grid grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-2 pt-[30px]">
         {countrys.map((country) => (
           <div className="flag px-[10px]" key={country.name}>
             <CountryCard

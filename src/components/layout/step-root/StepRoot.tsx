@@ -6,7 +6,7 @@ const StepRoot = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <header className="bg-gray-light-tertiary md:bg-transparent">
-        <div className="center flex items-center justify-end">
+        <div className="center flex items-center justify-end bg-default-gray-ligth-primary md:bg-transparent">
           <ProgressWrapper />
         </div>
       </header>
@@ -15,16 +15,18 @@ const StepRoot = ({ children }: { children: React.ReactNode }) => {
           <div className="col-span-4 md:col-span-1">
             <AsideRegister />
           </div>
-          <div className="content pt-[57px]">
-            <div className="content-container md:min-h-[398px] md:max-h-[398px] overflow-y-scroll md:overflow-y-auto mb-4 md:mb-10">
+          <div className="content pt-[20px]">
+            <div className="content-container md:min-h-[398px] md:max-h-[398px] overflow-y-auto md:overflow-y-auto mb-4 md:mb-10">
               <div>{children}</div>
             </div>
-            <NextStepComponent
-              text="Continuar"
-              href="/register/country"
-              // className={buttonStyle}
-              disabled={false}
-            />
+            <div className="py-10">
+              <NextStepComponent
+                text="Continuar"
+                href="/register/country"
+                // className={buttonStyle}
+                disabled={false}
+              />
+            </div>
           </div>
         </div>
       </div>

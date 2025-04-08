@@ -18,15 +18,16 @@ const NextStepComponent = ({
 }: INextStepComponentProps) => {
   return (
     <div className="next-step">
-      <Link href={disabled ? "#" : href} passHref>
-        <Button
-          variant={disabled ? "default-gray" : "default-primary"}
-          className="w-full max-w-[200px]"
-          disabled={false}
-        >
-          {text}
-        </Button>
-      </Link>
+      {/* <Link className="block w-full" href={disabled ? "#" : href} passHref>
+        
+      </Link> */}
+      <Button
+        variant={disabled ? "default-gray" : "default-primary"}
+        className="w-full max-w-[200px] block"
+        disabled={false}
+      >
+        {text}
+      </Button>
     </div>
   );
 };

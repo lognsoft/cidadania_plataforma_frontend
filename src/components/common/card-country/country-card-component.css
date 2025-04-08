@@ -1,5 +1,23 @@
+.card-country picture{
+  @apply
+  relative
+  mx-auto
+  z-10
+  -translate-y-10;
+}
+
 .card-country picture .image-country {
-  @apply w-auto h-auto left-[50%] -translate-x-[50%] -translate-y-[30px] relative inline-block z-10;
+  @apply
+  w-auto
+  h-auto
+  inline-block
+}
+
+.card-country .text-container{
+  @apply
+  w-full
+  relative
+  -translate-y-6
 }
 
 .card-country h3 {
