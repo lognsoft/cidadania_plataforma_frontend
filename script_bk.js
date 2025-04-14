@@ -328,38 +328,9 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
           });
         }
       });
+      // Removemos as opções de pentavô e tio-pentavô para o tio-trisavô
 
-      const pentavosExistentes = membros.filter(m =>
-        m.grauParentesco &&
-        m.grauParentesco.toLowerCase() === "pentavô" &&
-        !m.somenteLink
-      );
-      const tioPentavosExistentes = membros.filter(m =>
-        m.grauParentesco &&
-        m.grauParentesco.toLowerCase().replace(/\s+/g, '-') === "tio-pentavô" &&
-        !m.somenteLink
-      );
-      if (pentavosExistentes.length > 0) {
-        pentavosExistentes.forEach(pv => {
-          if (!membroOrigem.conexoes.some(c => c.idDestino === pv.id)) {
-            ops.push({
-              value: "conectar-pentavô-" + pv.id,
-              label: "Conectar com pentavô - " + pv.nome
-            });
-          }
-        });
-      }
-      if (tioPentavosExistentes.length > 0) {
-        tioPentavosExistentes.forEach(tp => {
-          if (!membroOrigem.conexoes.some(c => c.idDestino === tp.id)) {
-            ops.push({
-              value: "conectar-tio-pentavô-" + tp.id,
-              label: "Conectar com tio-pentavô - " + tp.nome
-            });
-          }
-        });
-      }
-
+      // Se nenhuma opção de conexão foi adicionada, adiciona a opção de criar novo tio-tetravô
       ops.push({ value: "criar-tio-tetravô", label: "Criar novo tio-tetravô" });
 
       ops.forEach(({ value, label }) => {
@@ -1082,7 +1053,9 @@ function desenharMembros() {
     contexto.fillStyle = "#4CAF50";
     contexto.fillRect(pos.x, pos.y, pos.tamanho, pos.tamanho);
 
-    // Desenhar sinal superior ("+")
+    // ===============================
+    // DESENHAR SINAL SUPERIOR ("+")
+    // ===============================
     if (
       grau !== "tio-hexavô" &&
       grau !== "hexavô" &&
@@ -1100,6 +1073,9 @@ function desenharMembros() {
       }
     }
 
+    // ===============================
+    // DESENHAR SINAL INFERIOR ("+")
+    // ===============================
     let exibeSinalInferior = true;
     if (grau === "neto") {
       exibeSinalInferior = false;
@@ -1128,16 +1104,30 @@ function desenharMembros() {
 
 function desenharTextoMembro(membro) {
   const pos = membro.posicaoTela;
+  const editarX = pos.x + pos.tamanho - 50;
+  const editarY = pos.y + pos.tamanho - 20;
+  const editarWidth = 50;
+  const editarHeight = 20;
+  
+  // Desenhar fundo do texto "editar"
+  contexto.fillStyle = "#ffc107";  // Cor de fundo (amarelo)
+  contexto.fillRect(editarX, editarY, editarWidth, editarHeight);
+  
+  // Desenhar o texto "editar"
   contexto.fillStyle = "white";
   contexto.font = `bold ${12 / visao.escala}px Arial`;
-  contexto.fillText("editar", pos.x + pos.tamanho - 50, pos.y + pos.tamanho - 5);
+  contexto.textAlign = "left";
+  contexto.textBaseline = "bottom";
+  contexto.fillText("editar", editarX, pos.y + pos.tamanho - 5);
 
+  // Desenhar o grau
   contexto.fillStyle = "black";
   contexto.font = `${12 / visao.escala}px Arial`;
   contexto.textAlign = "center";
   contexto.textBaseline = "top";
   contexto.fillText(membro.grauParentesco || "", pos.x + pos.tamanho / 2, pos.y + 2);
 
+  // Desenhar o nome
   contexto.font = `${14 / visao.escala}px Arial`;
   contexto.textBaseline = "middle";
   contexto.fillText(membro.nome, pos.x + pos.tamanho / 2, pos.y + pos.tamanho / 2);
