@@ -129,33 +129,90 @@ function getNextDescendantLabel(currentLabel) {
   return `filho (nível ${index + 1})`;
 }
 
+
 function obterParentescoAutomatico(membroOrigem, direcao) {
-  const pk = (membroOrigem.grauParentesco || "Eu").toLowerCase();
-  if (direcao === "topo") {
+  // Obtém o grau atual em minúsculas e normaliza (substitui espaços por hífens)
+  let pk = (membroOrigem.grauParentesco || "eu").toLowerCase();
+  let normalizedPk = pk.replace(/\s+/g, '-');
+
+  if (direcao === "baixo") {
+    // Mapeamento dos ancestrais puros para membros com o prefixo "tio":
+    // "avô"   => "tio"
+    // "bisavô"   => "tio-avô"
+    // "trisavô"  => "tio-bisavô"
+    // "tetravô"  => "tio-trisavô"
+    // "pentavô"  => "tio-tetravô"
+    // "hexavô"   => "tio-pentavô"
+    const ancestorMapping = {
+      "hexavô": "tio-pentavô",
+      "pentavô": "tio-tetravô",
+      "tetravô": "tio-trisavô",
+      "trisavô": "tio-bisavô",
+      "bisavô": "tio-avô",
+      "avô": "tio"
+    };
+    if (ancestorMapping[normalizedPk]) {
+      return ancestorMapping[normalizedPk];
+    }
+
+    // Se já faz parte da cadeia dos "tio", avança para o próximo nível
+    const tioChain = [
+      "tio-hexavô",
+      "tio-pentavô",
+      "tio-tetravô",
+      "tio-trisavô",
+      "tio-bisavô",
+      "tio-avô",
+      "tio",
+      "primo"
+    ];
+    if (tioChain.includes(normalizedPk)) {
+      let pos = tioChain.indexOf(normalizedPk);
+      return (pos < tioChain.length - 1) ? tioChain[pos + 1] : tioChain[pos];
+    }
+    
+    // Regras padrão para outros casos
+    if (pk === "sobrinho") return "neto";
+    if (pk === "irmao") return "sobrinho";
+    if (!descendantLabels.includes(pk)) {
+      return descendantLabels[0];  // normalmente "filho"
+    }
+    return getNextDescendantLabel(pk);
+    
+  } else if (direcao === "topo") {
+    // Para criação de ancestrais via sinal superior
     if (pk.startsWith("tio")) {
       return getNextTioAvoLabel(pk);
     }
     if (pk === "primo") return "tio";
     if (pk === "irmao") return "irmao";
     if (pk === "eu") return ancestorLabels[0];
-    return getNextAncestorLabel(pk);
-  } else if (direcao === "baixo") {
-    if (pk === "sobrinho") return "neto";
-    if (pk === "irmao") return "sobrinho";
-    if (pk === "primo") return "primo";
-    if (!descendantLabels.includes(pk)) {
-      return descendantLabels[0];
+    
+    const ancestorChain = ["avô", "bisavô", "trisavô", "tetravô", "pentavô", "hexavô"];
+    let normalizedAncestor = pk.replace(/\s+/g, '-');
+    if (ancestorChain.includes(normalizedAncestor)) {
+      let pos = ancestorChain.indexOf(normalizedAncestor);
+      return (pos < ancestorChain.length - 1) ? ancestorChain[pos + 1] : ancestorChain[pos];
     }
-    return getNextDescendantLabel(pk);
+    return getNextAncestorLabel(pk);
+    
   } else if (direcao === "esquerda") {
     if (pk === "eu" || pk === "irmao") return "irmao";
     return "tio";
+    
   } else if (direcao === "direita") {
     if (pk === "eu" || pk === "primo") return "primo";
     return "tio";
   }
   return "outro";
 }
+
+
+
+
+
+
+
 
 // --------------------------
 // MODAL – ELEMENTOS E CONTROLE
@@ -989,63 +1046,97 @@ function desenharMais(cx, cy) {
   contexto.restore();
 }
 
+
 function desenharMembros() {
+  // Listas de referência para ancestrais e para os "tio"
+  const ancestorBase = ["avô", "bisavô", "trisavô", "tetravô", "pentavô", "hexavô"];
+  const tioChain = [
+    "tio-hexavô", "tio-pentavô", "tio-tetravô",
+    "tio-trisavô", "tio-bisavô", "tio-avô",
+    "tio", "primo"
+  ];
+
   membros.forEach(membro => {
     if (membro.somenteLink) return;
 
     const pos = membro.posicaoTela;
+    const metade = pos.tamanho / 2;
+    // Normaliza o grau (converte para minúsculas e substitui espaços por hífens)
+    const grau = (membro.grauParentesco || "").toLowerCase().replace(/\s+/g, '-');
+
+    // Desenha o retângulo do membro (quadrado verde)
     contexto.fillStyle = "#4CAF50";
     contexto.fillRect(pos.x, pos.y, pos.tamanho, pos.tamanho);
-    const metade = pos.tamanho / 2;
-    const grau = membro.grauParentesco ? membro.grauParentesco.toLowerCase() : "";
 
-    // Desenha o sinal de "+" superior
+    // ===============================
+    // DESENHAR SINAL SUPERIOR ("+")
+    // ===============================
+    // Não exibe se for "tio-hexavô" OU "hexavô" OU se o membro foi criado via "baixo"
     if (
-      (grau === "eu" &&
-        !membro.conexoes.some(con => {
-          const tipo = con.tipoLink.toLowerCase();
-          return tipo === "pai" || tipo === "mae";
-        })) ||
-      ((grau === "primo" ? countPrimoAncestors(membro) === 0 : true) &&
-        grau !== "irmao" &&
-        grau !== "sobrinho" &&
-        grau !== "neto" &&
-        grau !== "filho" &&
-        !membro.conexoes.some(con => con.direcao === "topo") &&
-        grau !== linhaPai[linhaPai.length - 1])
+      grau !== "tio-hexavô" &&
+      grau !== "hexavô" &&
+      membro.direcaoCriacao !== "baixo"
     ) {
-      desenharMais(pos.x + metade, pos.y - distanciaDeslocamento);
+      // Exemplo de lógica:
+      // - Se for "eu" sem conexão pai/mãe, exibe
+      // - Se não tiver conexão topo e não for (irmão, sobrinho, neto, filho), exibe
+      if (
+        (grau === "eu" && !membro.conexoes.some(con => {
+            const tipo = con.tipoLink.toLowerCase();
+            return tipo === "pai" || tipo === "mae";
+        })) ||
+        (!membro.conexoes.some(con => con.direcao === "topo") &&
+         (grau !== "irmao" && grau !== "sobrinho" && grau !== "neto" && grau !== "filho"))
+      ) {
+        desenharMais(pos.x + metade, pos.y - 20);  // Ajuste de deslocamento
+      }
     }
 
-    // Desenha o sinal de "+" inferior
+    // ===============================
+    // DESENHAR SINAL INFERIOR ("+")
+    // ===============================
     let exibeSinalInferior = true;
-    if (membro.direcaoCriacao && membro.direcaoCriacao === "topo") {
-      exibeSinalInferior = false;
-    }
+
+    // Se o membro for "neto", não exibe
     if (grau === "neto") {
       exibeSinalInferior = false;
-    } else if (grau === "primo") {
-      const numPrimoAncestors = countPrimoAncestors(membro);
-      if (numPrimoAncestors >= 2) {
+    }
+
+    // Se foi criado via "topo", a lógica original ocultaria,
+    // mas se for ancestral ou "tio", forçamos a aparecer
+    if (membro.direcaoCriacao === "topo") {
+      const isAncestor = ancestorBase.includes(grau);
+      const isTio = tioChain.includes(grau);
+      if (!isAncestor && !isTio) {
         exibeSinalInferior = false;
-      } else {
-        desenharMais(pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento + 5);
-      }
-    } else {
-      if (exibeSinalInferior) {
-        desenharMais(pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento);
       }
     }
 
-    // Desenha sinais laterais se for "Eu"
+    // Impedir que o 3º primo (ou além) tenha o sinal de "+" abaixo
+    if (grau === "primo" && countPrimoAncestors(membro) >= 2) {
+      exibeSinalInferior = false;
+    }
+
+    if (exibeSinalInferior) {
+      desenharMais(pos.x + metade, pos.y + pos.tamanho + 20);
+    }
+
+    // ===============================
+    // DESENHAR SINAL LATERAL (para "eu")
+    // ===============================
     if (grau === "eu") {
-      desenharMais(pos.x - distanciaDeslocamento, pos.y + pos.tamanho / 2);
-      desenharMais(pos.x + pos.tamanho + distanciaDeslocamento, pos.y + pos.tamanho / 2);
+      desenharMais(pos.x - 20, pos.y + pos.tamanho / 2);
+      desenharMais(pos.x + pos.tamanho + 20, pos.y + pos.tamanho / 2);
     }
 
+    // Desenha o texto (nome, grau, etc.)
     desenharTextoMembro(membro);
   });
 }
+
+
+
+
 
 function desenharTextoMembro(membro) {
   const pos = membro.posicaoTela;
