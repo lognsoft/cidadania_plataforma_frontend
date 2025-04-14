@@ -11,6 +11,19 @@
       display: block;
       margin: 0 auto;
     }
+    /* Estilo para o ícone de alternar as linhas */
+    #toggle-lines {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 2000;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      cursor: pointer;
+      user-select: none;
+      font-family: Arial, sans-serif;
+    }
     .modal {
       display: none;
       position: fixed;
@@ -73,6 +86,9 @@
   </style>
 </head>
 <body>
+  <!-- Ícone para alternar as linhas auxiliares -->
+  <div id="toggle-lines">Linhas: ON</div>
+  
   <canvas id="meuCanvas" width="1200" height="1300"></canvas>
   
   <!-- Modal para adicionar novo membro -->

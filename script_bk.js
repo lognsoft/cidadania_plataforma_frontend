@@ -6,6 +6,9 @@ let membros = [];
 let contadorMembros = 1;
 const gridSize = 20; // Tamanho do grid para snap-to-grid
 
+// Variável para exibir ou ocultar as linhas auxiliares
+let showAuxLines = true;
+
 // Arrays para rótulos
 const ancestorLabels = ["pai", "avô", "bisavô", "trisavô", "tetravô", "pentavô", "hexavô"];
 const descendantLabels = ["filho", "neto", "bisneto", "tataraneto"];
@@ -330,7 +333,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
       });
       // Removemos as opções de pentavô e tio-pentavô para o tio-trisavô
 
-      // Se nenhuma opção de conexão foi adicionada, adiciona a opção de criar novo tio-tetravô
       ops.push({ value: "criar-tio-tetravô", label: "Criar novo tio-tetravô" });
 
       ops.forEach(({ value, label }) => {
@@ -866,7 +868,7 @@ function confirmarAdicionarMembro() {
         con =>
           con.direcao === "topo" &&
           (con.tipoLink.toLowerCase() === "pai" ||
-            con.tipoLink.toLowerCase() === "mae")
+           con.tipoLink.toLowerCase() === "mae")
       );
       if (conexaoPaiMae) {
         novoMembro.conexoes.push({
@@ -913,12 +915,81 @@ function confirmarAdicionarMembro() {
 const elementoCanvas = document.getElementById("meuCanvas");
 const contexto = elementoCanvas.getContext("2d");
 
+/*
+ * Função para desenhar as linhas verticais auxiliares.
+ * Para cada membro, calcula-se o centro horizontal e desenha-se uma linha vertical tracejada.
+ */
+function desenharLinhasVerticais() {
+  const xSet = new Set();
+  membros.forEach(membro => {
+    const pos = membro.posicaoTela;
+    const centerX = pos.x + pos.tamanho / 2;
+    xSet.add(centerX);
+  });
+
+  const canvasHeightWorld = elementoCanvas.height / visao.escala;
+  const topWorld = -visao.deslocamentoY / visao.escala;
+  const bottomWorld = topWorld + canvasHeightWorld;
+
+  contexto.save();
+  contexto.strokeStyle = "rgba(0, 0, 255, 0.3)";
+  contexto.lineWidth = 1 / visao.escala;
+  contexto.setLineDash([5, 5]);
+  
+  xSet.forEach(x => {
+    contexto.beginPath();
+    contexto.moveTo(x, topWorld);
+    contexto.lineTo(x, bottomWorld);
+    contexto.stroke();
+  });
+  
+  contexto.setLineDash([]);
+  contexto.restore();
+}
+
+/*
+ * Função para desenhar as linhas horizontais auxiliares.
+ * Para cada membro, calcula-se o centro vertical e desenha-se uma linha horizontal tracejada.
+ */
+function desenharLinhasHorizontais() {
+  const ySet = new Set();
+  membros.forEach(membro => {
+    const pos = membro.posicaoTela;
+    const centerY = pos.y + pos.tamanho / 2;
+    ySet.add(centerY);
+  });
+
+  const canvasWidthWorld = elementoCanvas.width / visao.escala;
+  const leftWorld = -visao.deslocamentoX / visao.escala;
+  const rightWorld = leftWorld + canvasWidthWorld;
+
+  contexto.save();
+  contexto.strokeStyle = "rgba(0, 0, 255, 0.3)";
+  contexto.lineWidth = 1 / visao.escala;
+  contexto.setLineDash([5, 5]);
+
+  ySet.forEach(y => {
+    contexto.beginPath();
+    contexto.moveTo(leftWorld, y);
+    contexto.lineTo(rightWorld, y);
+    contexto.stroke();
+  });
+
+  contexto.setLineDash([]);
+  contexto.restore();
+}
+
 function desenharTudo() {
   contexto.clearRect(0, 0, elementoCanvas.width, elementoCanvas.height);
   contexto.save();
   contexto.translate(visao.deslocamentoX, visao.deslocamentoY);
   contexto.scale(visao.escala, visao.escala);
   desenharGrade();
+  // Se as linhas auxiliares estiverem ativas, as desenha
+  if (showAuxLines) {
+    desenharLinhasVerticais();
+    desenharLinhasHorizontais();
+  }
   desenharConexoes();
   desenharMembros();
   contexto.restore();
@@ -966,9 +1037,9 @@ function desenharConexoes() {
 
       if (
         (membro.grauParentesco.toLowerCase() === "eu" ||
-          destino.grauParentesco.toLowerCase() === "eu") &&
+         destino.grauParentesco.toLowerCase() === "eu") &&
         (con.tipoLink.toLowerCase() === "primo" ||
-          con.tipoLink.toLowerCase() === "irmao")
+         con.tipoLink.toLowerCase() === "irmao")
       ) {
         return;
       }
@@ -1053,9 +1124,7 @@ function desenharMembros() {
     contexto.fillStyle = "#4CAF50";
     contexto.fillRect(pos.x, pos.y, pos.tamanho, pos.tamanho);
 
-    // ===============================
     // DESENHAR SINAL SUPERIOR ("+")
-    // ===============================
     if (
       grau !== "tio-hexavô" &&
       grau !== "hexavô" &&
@@ -1063,8 +1132,8 @@ function desenharMembros() {
     ) {
       if (
         (grau === "eu" && !membro.conexoes.some(con => {
-            const tipo = con.tipoLink.toLowerCase();
-            return tipo === "pai" || tipo === "mae";
+          const tipo = con.tipoLink.toLowerCase();
+          return tipo === "pai" || tipo === "mae";
         })) ||
         (!membro.conexoes.some(con => con.direcao === "topo") &&
          (grau !== "irmao" && grau !== "sobrinho" && grau !== "neto" && grau !== "filho"))
@@ -1073,9 +1142,7 @@ function desenharMembros() {
       }
     }
 
-    // ===============================
     // DESENHAR SINAL INFERIOR ("+")
-    // ===============================
     let exibeSinalInferior = true;
     if (grau === "neto") {
       exibeSinalInferior = false;
@@ -1109,25 +1176,25 @@ function desenharTextoMembro(membro) {
   const editarWidth = 50;
   const editarHeight = 20;
   
-  // Desenhar fundo do texto "editar"
-  contexto.fillStyle = "#ffc107";  // Cor de fundo (amarelo)
+  // Fundo para identificar a área "editar"
+  contexto.fillStyle = "#ffc107";
   contexto.fillRect(editarX, editarY, editarWidth, editarHeight);
   
-  // Desenhar o texto "editar"
+  // Texto "editar"
   contexto.fillStyle = "white";
   contexto.font = `bold ${12 / visao.escala}px Arial`;
   contexto.textAlign = "left";
   contexto.textBaseline = "bottom";
   contexto.fillText("editar", editarX, pos.y + pos.tamanho - 5);
 
-  // Desenhar o grau
+  // Grau
   contexto.fillStyle = "black";
   contexto.font = `${12 / visao.escala}px Arial`;
   contexto.textAlign = "center";
   contexto.textBaseline = "top";
   contexto.fillText(membro.grauParentesco || "", pos.x + pos.tamanho / 2, pos.y + 2);
 
-  // Desenhar o nome
+  // Nome
   contexto.font = `${14 / visao.escala}px Arial`;
   contexto.textBaseline = "middle";
   contexto.fillText(membro.nome, pos.x + pos.tamanho / 2, pos.y + pos.tamanho / 2);
@@ -1145,7 +1212,7 @@ let deslocamentoInicialVisao = { deslocamentoX: 0, deslocamentoY: 0 };
 elementoCanvas.addEventListener("wheel", e => {
   e.preventDefault();
   const mx = e.offsetX,
-    my = e.offsetY;
+        my = e.offsetY;
   const antes = obterCoordenadasMundo(mx, my);
   if (e.deltaY < 0) {
     visao.escala *= 1.1;
@@ -1322,3 +1389,13 @@ function jaTemConexaoAcima(membro) {
 // --------------------------
 carregarEstado();
 desenharTudo();
+
+// ---------------
+// LÓGICA PARA O ÍCONE DE ALTERNAR LINHAS
+// ---------------
+const toggleLinesBtn = document.getElementById("toggle-lines");
+toggleLinesBtn.addEventListener("click", () => {
+  showAuxLines = !showAuxLines;
+  toggleLinesBtn.innerText = `Linhas: ${showAuxLines ? "ON" : "OFF"}`;
+  desenharTudo();
+});
