@@ -129,20 +129,11 @@ function getNextDescendantLabel(currentLabel) {
   return `filho (nível ${index + 1})`;
 }
 
-
 function obterParentescoAutomatico(membroOrigem, direcao) {
-  // Obtém o grau atual em minúsculas e normaliza (substitui espaços por hífens)
   let pk = (membroOrigem.grauParentesco || "eu").toLowerCase();
   let normalizedPk = pk.replace(/\s+/g, '-');
 
   if (direcao === "baixo") {
-    // Mapeamento dos ancestrais puros para membros com o prefixo "tio":
-    // "avô"   => "tio"
-    // "bisavô"   => "tio-avô"
-    // "trisavô"  => "tio-bisavô"
-    // "tetravô"  => "tio-trisavô"
-    // "pentavô"  => "tio-tetravô"
-    // "hexavô"   => "tio-pentavô"
     const ancestorMapping = {
       "hexavô": "tio-pentavô",
       "pentavô": "tio-tetravô",
@@ -155,7 +146,6 @@ function obterParentescoAutomatico(membroOrigem, direcao) {
       return ancestorMapping[normalizedPk];
     }
 
-    // Se já faz parte da cadeia dos "tio", avança para o próximo nível
     const tioChain = [
       "tio-hexavô",
       "tio-pentavô",
@@ -171,16 +161,14 @@ function obterParentescoAutomatico(membroOrigem, direcao) {
       return (pos < tioChain.length - 1) ? tioChain[pos + 1] : tioChain[pos];
     }
     
-    // Regras padrão para outros casos
     if (pk === "sobrinho") return "neto";
     if (pk === "irmao") return "sobrinho";
     if (!descendantLabels.includes(pk)) {
-      return descendantLabels[0];  // normalmente "filho"
+      return descendantLabels[0];
     }
     return getNextDescendantLabel(pk);
     
   } else if (direcao === "topo") {
-    // Para criação de ancestrais via sinal superior
     if (pk.startsWith("tio")) {
       return getNextTioAvoLabel(pk);
     }
@@ -207,13 +195,6 @@ function obterParentescoAutomatico(membroOrigem, direcao) {
   return "outro";
 }
 
-
-
-
-
-
-
-
 // --------------------------
 // MODAL – ELEMENTOS E CONTROLE
 // --------------------------
@@ -234,11 +215,71 @@ botaoAdicionarCancelar.onclick = fecharModalAdicionar;
 let membroPendente = null;
 let direcaoPendente = null;
 
+// Modal para editar membro
+const modalEditar = document.getElementById("modal-editar");
+const modalEditarFechar = document.getElementById("modal-editar-fechar");
+const entradaEditarNome = document.getElementById("entradaEditarNome");
+const entradaEditarNascimento = document.getElementById("entradaEditarNascimento");
+const entradaEditarGenero = document.getElementById("entradaEditarGenero");
+const entradaEditarPais = document.getElementById("entradaEditarPais");
+const entradaEditarParentesco = document.getElementById("entradaEditarParentesco");
+const botaoEditarSalvar = document.getElementById("botaoEditarSalvar");
+const botaoEditarCancelar = document.getElementById("botaoEditarCancelar");
+
+modalEditarFechar.onclick = fecharModalEditar;
+botaoEditarSalvar.onclick = confirmarEditarMembro;
+botaoEditarCancelar.onclick = fecharModalEditar;
+
+let membroEditando = null;  // Membro atualmente sendo editado
+
 // --------------------------
-// MOSTRAR MODAL PARA ADICIONAR
+// FUNÇÃO PARA DETECTAR CLIQUE NO "EDITAR"
+// --------------------------
+function clicouNoEditarTexto(mx, my, x, y, tamanho) {
+  const editX = x + tamanho - 50;
+  const editY = y + tamanho - 20;
+  const editWidth = 50;
+  const editHeight = 20;
+  return (mx >= editX && mx <= editX + editWidth && my >= editY && my <= editY + editHeight);
+}
+
+// --------------------------
+// FUNÇÃO PARA ABRIR MODAL DE EDIÇÃO
+// --------------------------
+function abrirModalEditar(membro) {
+  membroEditando = membro;
+  entradaEditarNome.value = membro.nome || "";
+  entradaEditarNascimento.value = membro.dataNascimento || "";
+  entradaEditarGenero.value = membro.genero || "Masculino";
+  entradaEditarPais.value = membro.pais || "Brasil";
+  entradaEditarParentesco.value = membro.grauParentesco || "";
+  modalEditar.style.display = "block";
+}
+
+function fecharModalEditar() {
+  modalEditar.style.display = "none";
+  membroEditando = null;
+}
+
+// --------------------------
+// CONFIRMAR EDIÇÃO DO MEMBRO
+// --------------------------
+function confirmarEditarMembro() {
+  if (!membroEditando) return;
+  membroEditando.nome = entradaEditarNome.value;
+  membroEditando.dataNascimento = entradaEditarNascimento.value;
+  membroEditando.genero = entradaEditarGenero.value;
+  membroEditando.pais = entradaEditarPais.value;
+  membroEditando.grauParentesco = entradaEditarParentesco.value;
+  fecharModalEditar();
+  desenharTudo();
+  salvarEstado();
+}
+
+// --------------------------
+// MODAL PARA ADICIONAR MEMBRO – FUNÇÃO MOSTRAR MODAL
 // --------------------------
 function mostrarModalAdicionar(membroOrigem, direcao) {
-  // Se já existe algo conectado acima (exceto "Eu"), não abre novo modal
   if (
     direcao === "topo" &&
     membroOrigem.grauParentesco.toLowerCase() !== "eu" &&
@@ -256,13 +297,11 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
   entradaParentesco.innerHTML = "";
 
   if (direcao === "topo") {
-    // Bloco para "tio-trisavô"
     if (
       membroOrigem.grauParentesco.toLowerCase() === "tio-trisavô" ||
       membroOrigem.grauParentesco.toLowerCase() === "tio trisavô"
     ) {
       let ops = [];
-      // 1) Conectar com tetravô, se existir
       const tetravosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase() === "tetravô" &&
@@ -276,7 +315,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
           });
         }
       });
-      // 2) Conectar com tio-tetravô, se existir
       const tioTetravosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase().replace(/\s+/g, '-') === "tio-tetravô" &&
@@ -291,7 +329,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
         }
       });
 
-      // Conectar com pentavô ou tio-pentavô, se existirem
       const pentavosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase() === "pentavô" &&
@@ -323,7 +360,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
         });
       }
 
-      // Se nenhuma opção de conexão foi adicionada, sempre adicionar a opção de criar novo tio-pentavô
       ops.push({ value: "criar-tio-tetravô", label: "Criar novo tio-tetravô" });
 
       ops.forEach(({ value, label }) => {
@@ -337,7 +373,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
       return;
     }
 
-    // Bloco para "tio-avô"
     if (membroOrigem.grauParentesco.toLowerCase() === "tio-avô") {
       let ops = [];
       const bisavosExistentes = membros.filter(m =>
@@ -378,16 +413,11 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
       return;
     }
 
-    // -------------------------------------------------------
-    //  BLOCO PARA "TIO BISAVÔ" - ATUALIZADO
-    // -------------------------------------------------------
     else if (
       membroOrigem.grauParentesco.toLowerCase() === "tio bisavô" ||
       membroOrigem.grauParentesco.toLowerCase() === "tio-bisavô"
     ) {
       let ops = [];
-
-      // 1) Conectar com TIO-TRISAVÔ existente
       const tioTrisavosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase().replace(/\s+/g, '-') === "tio-trisavô" &&
@@ -402,7 +432,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
         }
       });
 
-      // 2) Conectar com TRISAVÔ existente
       const trisavosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase() === "trisavô" &&
@@ -417,7 +446,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
         }
       });
 
-      // 3) Conectar com TIO-TETRAVÔ existente
       const tioTetravosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase().replace(/\s+/g, '-') === "tio-tetravô" &&
@@ -432,7 +460,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
         }
       });
       
-      // 4) Criar novo TIO-TRISAVÔ
       ops.push({ value: "criar-tio-trisavô", label: "Criar novo tio-trisavô" });
 
       ops.forEach(({ value, label }) => {
@@ -491,7 +518,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
       membroOrigem.grauParentesco.toLowerCase() === "tio tetravô"
     ) {
       let ops = [];
-      // Opção 1: Conectar com pentavô, se existir
       const pentavosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase() === "pentavô" &&
@@ -505,7 +531,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
           });
         }
       });
-      // Opção 2: Conectar com tio-pentavô, se existir
       const tioPentavosExistentes = membros.filter(m =>
         m.grauParentesco &&
         m.grauParentesco.toLowerCase().replace(/\s+/g, '-') === "tio-pentavô" &&
@@ -519,7 +544,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
           });
         }
       });
-      // Sempre adicionar a opção de criar
       ops.push({ value: "criar-tio-pentavô", label: "Criar novo tio-pentavô" });
 
       ops.forEach(({ value, label }) => {
@@ -597,7 +621,6 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
     }
   }
 
-  // Se não se enquadrar em nenhum dos casos específicos, usa o parentesco automático
   const parentescoAuto = obterParentescoAutomatico(membroOrigem, direcao);
   const opt = document.createElement("option");
   opt.value = parentescoAuto;
@@ -609,7 +632,7 @@ function mostrarModalAdicionar(membroOrigem, direcao) {
 }
 
 // --------------------------
-// FECHAR MODAL
+// FECHAR MODAL ADICIONAR
 // --------------------------
 function fecharModalAdicionar() {
   modalAdicionar.style.display = "none";
@@ -627,7 +650,6 @@ function confirmarAdicionarMembro() {
   }
   const valorSelecionado = entradaParentesco.value;
 
-  // Verifica as novas condições de conexão para "pentavô" e "tio-pentavô"
   if (valorSelecionado.startsWith("conectar-pentavô-")) {
     const idPentavo = valorSelecionado.replace("conectar-pentavô-", "");
     const pentavoExistente = membros.find(m => m.id === idPentavo);
@@ -662,7 +684,6 @@ function confirmarAdicionarMembro() {
     return;
   }
 
-  // Blocos originais
   if (valorSelecionado.startsWith("conectar-tetravô-")) {
     const idTetravo = valorSelecionado.replace("conectar-tetravô-", "");
     const tetravoExistente = membros.find(m => m.id === idTetravo);
@@ -816,7 +837,6 @@ function confirmarAdicionarMembro() {
     return;
   }
 
-  // Criação de novos membros
   if (valorSelecionado === "criar-tio-tetravô") {
     criarEConectar("tio-tetravô");
     return;
@@ -846,7 +866,6 @@ function confirmarAdicionarMembro() {
     return;
   }
 
-  // Se não cair em nenhum dos casos, usa o valor selecionado
   criarEConectar(valorSelecionado);
 
   function criarEConectar(tipo) {
@@ -974,7 +993,6 @@ function desenharConexoes() {
       const destino = membros.find(x => x.id === con.idDestino);
       if (!destino) return;
 
-      // Evita linhas redundantes em certos casos
       if (
         (membro.grauParentesco.toLowerCase() === "eu" ||
           destino.grauParentesco.toLowerCase() === "eu") &&
@@ -1046,9 +1064,7 @@ function desenharMais(cx, cy) {
   contexto.restore();
 }
 
-
 function desenharMembros() {
-  // Listas de referência para ancestrais e para os "tio"
   const ancestorBase = ["avô", "bisavô", "trisavô", "tetravô", "pentavô", "hexavô"];
   const tioChain = [
     "tio-hexavô", "tio-pentavô", "tio-tetravô",
@@ -1061,25 +1077,17 @@ function desenharMembros() {
 
     const pos = membro.posicaoTela;
     const metade = pos.tamanho / 2;
-    // Normaliza o grau (converte para minúsculas e substitui espaços por hífens)
     const grau = (membro.grauParentesco || "").toLowerCase().replace(/\s+/g, '-');
 
-    // Desenha o retângulo do membro (quadrado verde)
     contexto.fillStyle = "#4CAF50";
     contexto.fillRect(pos.x, pos.y, pos.tamanho, pos.tamanho);
 
-    // ===============================
-    // DESENHAR SINAL SUPERIOR ("+")
-    // ===============================
-    // Não exibe se for "tio-hexavô" OU "hexavô" OU se o membro foi criado via "baixo"
+    // Desenhar sinal superior ("+")
     if (
       grau !== "tio-hexavô" &&
       grau !== "hexavô" &&
       membro.direcaoCriacao !== "baixo"
     ) {
-      // Exemplo de lógica:
-      // - Se for "eu" sem conexão pai/mãe, exibe
-      // - Se não tiver conexão topo e não for (irmão, sobrinho, neto, filho), exibe
       if (
         (grau === "eu" && !membro.conexoes.some(con => {
             const tipo = con.tipoLink.toLowerCase();
@@ -1088,22 +1096,14 @@ function desenharMembros() {
         (!membro.conexoes.some(con => con.direcao === "topo") &&
          (grau !== "irmao" && grau !== "sobrinho" && grau !== "neto" && grau !== "filho"))
       ) {
-        desenharMais(pos.x + metade, pos.y - 20);  // Ajuste de deslocamento
+        desenharMais(pos.x + metade, pos.y - 20);
       }
     }
 
-    // ===============================
-    // DESENHAR SINAL INFERIOR ("+")
-    // ===============================
     let exibeSinalInferior = true;
-
-    // Se o membro for "neto", não exibe
     if (grau === "neto") {
       exibeSinalInferior = false;
     }
-
-    // Se foi criado via "topo", a lógica original ocultaria,
-    // mas se for ancestral ou "tio", forçamos a aparecer
     if (membro.direcaoCriacao === "topo") {
       const isAncestor = ancestorBase.includes(grau);
       const isTio = tioChain.includes(grau);
@@ -1111,32 +1111,20 @@ function desenharMembros() {
         exibeSinalInferior = false;
       }
     }
-
-    // Impedir que o 3º primo (ou além) tenha o sinal de "+" abaixo
     if (grau === "primo" && countPrimoAncestors(membro) >= 2) {
       exibeSinalInferior = false;
     }
-
     if (exibeSinalInferior) {
       desenharMais(pos.x + metade, pos.y + pos.tamanho + 20);
     }
-
-    // ===============================
-    // DESENHAR SINAL LATERAL (para "eu")
-    // ===============================
     if (grau === "eu") {
       desenharMais(pos.x - 20, pos.y + pos.tamanho / 2);
       desenharMais(pos.x + pos.tamanho + 20, pos.y + pos.tamanho / 2);
     }
 
-    // Desenha o texto (nome, grau, etc.)
     desenharTextoMembro(membro);
   });
 }
-
-
-
-
 
 function desenharTextoMembro(membro) {
   const pos = membro.posicaoTela;
@@ -1156,7 +1144,7 @@ function desenharTextoMembro(membro) {
 }
 
 // --------------------------
-// EVENTOS DE ARRASTE E ZOOM
+// EVENTOS DE ARRASTE, ZOOM E CLIQUE
 // --------------------------
 let membroArrastando = null;
 let deslocamentoArraste = { x: 0, y: 0 };
@@ -1210,10 +1198,19 @@ function tratarInicio(e) {
   e.preventDefault();
   const ponteiro = obterCoordenadasPonteiro(e);
   const posMundo = obterCoordenadasMundo(ponteiro.x, ponteiro.y);
-  const mx = posMundo.x,
-    my = posMundo.y;
+  const mx = posMundo.x, my = posMundo.y;
 
-  // Verifica se clicou em algum membro
+  // Verifica se o clique foi na área do texto "editar"
+  for (let i = membros.length - 1; i >= 0; i--) {
+    const membro = membros[i];
+    const pos = membro.posicaoTela;
+    if (clicouNoEditarTexto(mx, my, pos.x, pos.y, pos.tamanho)) {
+      abrirModalEditar(membro);
+      return;
+    }
+  }
+
+  // Verifica se clicou em algum membro para arrastar
   for (let i = membros.length - 1; i >= 0; i--) {
     const membro = membros[i];
     if (membro.somenteLink) continue;
@@ -1226,26 +1223,19 @@ function tratarInicio(e) {
     }
   }
 
-  // Verifica se clicou no sinal de "+"
+  // Verifica se clicou no sinal "+"
   for (let membro of membros) {
     if (membro.somenteLink) continue;
     const pos = membro.posicaoTela;
     const metade = pos.tamanho / 2;
-
-    // Impede de adicionar acima se já for tetravô (último da lista) ou nível customizado
     if (membro.grauParentesco.toLowerCase() === linhaPai[linhaPai.length - 1]) continue;
-
-    // Clique no "+" superior
     if (clicouNoMais(mx, my, pos.x + metade, pos.y - distanciaDeslocamento)) {
-      if (membro.grauParentesco.toLowerCase() === "irmao") continue; // Se for irmão, não cria ancestral
+      if (membro.grauParentesco.toLowerCase() === "irmao") continue;
       mostrarModalAdicionar(membro, "topo");
       return;
     }
-
-    // Clique no "+" inferior
     if (membro.grauParentesco.toLowerCase() !== "neto") {
       if (membro.grauParentesco.toLowerCase() === "primo") {
-        // Sinal um pouco mais abaixo
         if (
           clicouNoMais(
             mx,
@@ -1258,16 +1248,12 @@ function tratarInicio(e) {
           return;
         }
       } else {
-        if (
-          clicouNoMais(mx, my, pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento)
-        ) {
+        if (clicouNoMais(mx, my, pos.x + metade, pos.y + pos.tamanho + distanciaDeslocamento)) {
           mostrarModalAdicionar(membro, "baixo");
           return;
         }
       }
     }
-
-    // Clique nos "+" laterais se for "Eu"
     if (membro.grauParentesco.toLowerCase() === "eu") {
       if (clicouNoMais(mx, my, pos.x - distanciaDeslocamento, pos.y + pos.tamanho / 2)) {
         mostrarModalAdicionar(membro, "esquerda");
@@ -1287,7 +1273,6 @@ function tratarInicio(e) {
     }
   }
 
-  // Se não clicou em membro nem em "+"
   arrastandoGrade = true;
   inicioArrasteGrade = { x: ponteiro.x, y: ponteiro.y };
   deslocamentoInicialVisao = {
@@ -1303,7 +1288,6 @@ function tratarMovimento(e) {
     const posMundo = obterCoordenadasMundo(ponteiro.x, ponteiro.y);
     let novoX = posMundo.x - deslocamentoArraste.x;
     let novoY = posMundo.y - deslocamentoArraste.y;
-    // Snap to grid
     novoX = Math.round(novoX / gridSize) * gridSize;
     novoY = Math.round(novoY / gridSize) * gridSize;
     membroArrastando.posicaoTela.x = novoX;

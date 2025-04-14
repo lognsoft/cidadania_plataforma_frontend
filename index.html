@@ -108,8 +108,41 @@
       <button class="btn btn-cancel" id="botaoAdicionarCancelar">Cancelar</button>
     </div>
   </div>
-
+  
+  <!-- Modal para editar membro -->
+  <div id="modal-editar" class="modal">
+    <div class="modal-content">
+      <span id="modal-editar-fechar" class="modal-close">&times;</span>
+      <h2>Editar Membro</h2>
+      <div class="form-group">
+        <label for="entradaEditarNome">Nome Completo</label>
+        <input type="text" id="entradaEditarNome" placeholder="Nome e sobrenome" />
+      </div>
+      <div class="form-group">
+        <label for="entradaEditarNascimento">Nascimento</label>
+        <input type="text" id="entradaEditarNascimento" placeholder="dd/mm/aaaa" />
+      </div>
+      <div class="form-group">
+        <label for="entradaEditarGenero">Gênero</label>
+        <select id="entradaEditarGenero">
+          <option value="Masculino">Masculino</option>
+          <option value="Feminino">Feminino</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="entradaEditarPais">País</label>
+        <input type="text" id="entradaEditarPais" placeholder="Brasil" />
+      </div>
+      <div class="form-group">
+        <label for="entradaEditarParentesco">Parentesco</label>
+        <input type="text" id="entradaEditarParentesco" placeholder="Parentesco" />
+      </div>
+      <button class="btn btn-save" id="botaoEditarSalvar">Salvar alterações</button>
+      <button class="btn btn-cancel" id="botaoEditarCancelar">Cancelar</button>
+    </div>
+  </div>
+  
   <script src="script_bk.js"></script>
-
 </body>
 </html>
